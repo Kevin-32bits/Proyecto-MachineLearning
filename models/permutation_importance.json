@@ -1,0 +1,77 @@
+[
+  {
+    "variable": "Curricular units 2nd sem (approved)",
+    "mean": 0.22607,
+    "std": 0.01078
+  },
+  {
+    "variable": "Tuition fees up to date",
+    "mean": 0.07585,
+    "std": 0.00784
+  },
+  {
+    "variable": "Curricular units 1st sem (approved)",
+    "mean": 0.01006,
+    "std": 0.00788
+  },
+  {
+    "variable": "Scholarship holder",
+    "mean": 0.00779,
+    "std": 0.005
+  },
+  {
+    "variable": "Curricular units 2nd sem (credited)",
+    "mean": 0.00749,
+    "std": 0.00441
+  },
+  {
+    "variable": "Age at enrollment",
+    "mean": 0.00696,
+    "std": 0.00798
+  },
+  {
+    "variable": "Father's occupation",
+    "mean": 0.00531,
+    "std": 0.00405
+  },
+  {
+    "variable": "Gender",
+    "mean": 0.00371,
+    "std": 0.00258
+  },
+  {
+    "variable": "Mother's qualification",
+    "mean": 0.00337,
+    "std": 0.00249
+  },
+  {
+    "variable": "Debtor",
+    "mean": 0.00263,
+    "std": 0.00252
+  },
+  {
+    "variable": "GDP",
+    "mean": 0.00152,
+    "std": 0.00213
+  },
+  {
+    "variable": "International",
+    "mean": 0.0009,
+    "std": 0.001
+  },
+  {
+    "variable": "Curricular units 1st sem (credited)",
+    "mean": 0.00056,
+    "std": 0.00331
+  },
+  {
+    "variable": "Curricular units 2nd sem (grade)",
+    "mean": 0.00045,
+    "std": 0.0048
+  },
+  {
+    "variable": "Curricular units 1st sem (without evaluations)",
+    "mean": 8e-05,
+    "std": 0.00097
+  }
+]
