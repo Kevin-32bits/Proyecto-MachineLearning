@@ -3,6 +3,5 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
-# El dataset se descarga con ucimlrepo; no se sube al repo
-data/raw/*.csv
+# data/raw/data.csv sí se sube: la app desplegada no debe depender de que UCI responda
 data/processed/*.csv

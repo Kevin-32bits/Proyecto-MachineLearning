@@ -58,10 +58,20 @@ X_train, X_test, y_train, y_test = get_train_test()
 python -m venv .venv
 .venv\Scripts\activate          # Windows  (Mac/Linux: source .venv/bin/activate)
 pip install -r requirements.txt
-python -m src.data_prep         # descarga el dataset, hace el split y genera la evidencia
+python -m src.data_prep         # hace el split y genera la evidencia
 python -m src.pipeline_diagram  # genera reports/figures/figura1_pipeline.png
 streamlit run app.py            # inicia la aplicación interactiva en el navegador
 ```
+
+## Despliegue en Streamlit Community Cloud
+1. Subir a GitHub los cambios, incluidos `data/raw/data.csv` y `models/`.
+2. En [share.streamlit.io](https://share.streamlit.io): **Create app** → repositorio `Kevin-32bits/Proyecto-MachineLearning`, rama `main`, archivo `app.py`.
+3. En **Advanced settings** elegir Python 3.12, 3.13 o 3.14 y desplegar.
+
+`requirements.txt` fija las versiones con las que se exportó `pipeline_ganador.joblib`; no actualizar scikit-learn sin volver a exportar el modelo.
+
+## Umbral de la app
+La app lee `umbral_operativo` de `models/metricas_test.json`. Para cambiarlo basta editar ese campo.
 
 ## Estructura
 ```
@@ -69,6 +79,7 @@ app.py                   aplicación web interactiva en Streamlit
 src/config.py            parámetros compartidos
 src/preprocessor.py      objeto ColumnTransformer y clasificación de variables
 src/data_prep.py         carga, objetivo binario y split
+src/scoring.py           semáforo, perfiles del simulador, lotes y métricas de la app
 src/pipeline_diagram.py  Figura 1 del informe
 notebooks/               notebooks de P2 y P3
 reports/                 evidencias y figuras para el informe
