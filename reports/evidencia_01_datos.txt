@@ -1,0 +1,40 @@
+=== EVIDENCIA 1: forma y objetivo ===
+df.shape (con Target): (4424, 37)
+X.shape (predictoras): (4424, 36)
+
+Target original:
+Target
+Graduate    2209
+Dropout     1421
+Enrolled     794
+
+Target original (%):
+Target
+Graduate    49.9
+Dropout     32.1
+Enrolled    17.9
+
+Target binario (1 = Dropout):
+dropout
+0    3003
+1    1421
+dropout
+0    67.9
+1    32.1
+
+=== EVIDENCIA 3: calidad de datos ===
+Valores nulos totales: 0
+Filas duplicadas: 0
+
+Tipos de datos:
+int64      29
+float64     7
+str         1
+
+=== EVIDENCIA 4: partición estratificada ===
+SEED = 42 | TEST_SIZE = 0.2
+X_train: (3539, 36) | X_test: (885, 36)
+Dropout en train: 1137 (32.1 %)
+Dropout en test : 284 (32.1 %)
+
+Chequeos OK: estratificado, sin solapamiento train/test.

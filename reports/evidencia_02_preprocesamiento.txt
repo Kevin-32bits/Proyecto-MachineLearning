@@ -1,0 +1,24 @@
+=== EVIDENCIA PARTE 2: EXPLORACIÓN, DICCIONARIO Y PREPROCESAMIENTO ===
+Dimensiones del dataset original: 4424 filas x 37 columnas
+Valores nulos totales: 0 (Comprobado: dataset completo sin valores faltantes)
+Filas duplicadas: 0 (Comprobado: registros únicos sin redundancia)
+
+--- CLASIFICACIÓN DE LAS 36 VARIABLES PREDICTORAS ---
+1. Nominales codificadas (9): Tratamiento -> OneHotEncoder(handle_unknown='ignore')
+   Variables: Marital Status, Application mode, Course, Previous qualification, Nacionality, Mother's qualification, Father's qualification, Mother's occupation, Father's occupation
+2. Binarias 0/1 (8): Tratamiento -> Passthrough (conservan escala 0/1)
+   Variables: Daytime/evening attendance, Displaced, Educational special needs, Debtor, Tuition fees up to date, Gender, Scholarship holder, International
+3. Numéricas continuas/conteo (19): Tratamiento -> StandardScaler()
+   Variables: Application order, Age at enrollment, Previous qualification (grade), Admission grade, Curricular units 1st sem (credited), Curricular units 1st sem (enrolled), Curricular units 1st sem (evaluations), Curricular units 1st sem (approved), Curricular units 1st sem (grade), Curricular units 1st sem (without evaluations), Curricular units 2nd sem (credited), Curricular units 2nd sem (enrolled), Curricular units 2nd sem (evaluations), Curricular units 2nd sem (approved), Curricular units 2nd sem (grade), Curricular units 2nd sem (without evaluations), Unemployment rate, Inflation rate, GDP
+
+--- PARTICIÓN ESTRATIFICADA (80/20, SEED 42) ---
+X_train original: (3539, 36) | y_train: (3539,) (Dropout: 1137 = 32.13%)
+X_test original : (885, 36) | y_test: (885,) (Dropout: 284 = 32.09%)
+
+--- RESULTADO DE LA TRANSFORMACIÓN (PREPROCESADOR AJUSTADO SOLO CON TRAIN) ---
+Columnas resultantes tras codificación One-Hot: 235 características
+X_train_transformado: (3539, 235)
+X_test_transformado : (885, 235)
+Valores nulos tras transformación (train): 0
+Valores nulos tras transformación (test) : 0
+Comprobación de dimensiones y compatibilidad: OK.
