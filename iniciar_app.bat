@@ -1,4 +1,6 @@
 @echo off
+chcp 65001 >nul
+set PYTHONUTF8=1
 title Sistema de Prediccion de Desercion - Streamlit
 echo ========================================================
 echo   Iniciando Aplicacion Web Streamlit...
