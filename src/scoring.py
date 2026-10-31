@@ -35,9 +35,13 @@ def semaforo(probabilidades, umbral: float) -> np.ndarray:
     )
 
 
-def validar_perfil(entradas: dict) -> list:
+def validar_perfil(entradas: dict, rangos: dict, etiquetas: dict) -> list:
     """Devuelve los errores de un perfil del simulador (vacío si es válido)."""
-    errores = []
+    errores = [
+        f"{etiquetas[col]}: debe estar entre {minimo} y {maximo}."
+        for col, (minimo, maximo) in rangos.items()
+        if not minimo <= entradas[col] <= maximo
+    ]
     for sem, nombre in zip(SEMESTRES, ("1er", "2do")):
         matriculadas = entradas[f"Curricular units {sem} sem (enrolled)"]
         if entradas[f"Curricular units {sem} sem (approved)"] > matriculadas:
@@ -57,6 +61,25 @@ def construir_perfil(medianas: dict, entradas: dict) -> pd.DataFrame:
         if perfil[f"Curricular units {sem} sem (approved)"] == 0:
             perfil[f"Curricular units {sem} sem (grade)"] = 0.0
     return pd.DataFrame([perfil])[ALL_FEATURE_COLS]
+
+
+def factores_riesgo(pipeline, medianas: dict, entradas: dict):
+    """Mide cada dato por separado frente a un estudiante típico.
+
+    Parte del perfil con las medianas de train y cambia un solo dato cada vez:
+    positivo sube el riesgo, negativo lo baja. Devuelve (riesgo_tipico, aportes
+    de mayor a menor). Los aportes no se suman y no son una relación causal.
+    """
+    def probabilidad(cambios):
+        return float(pipeline.predict_proba(construir_perfil(medianas, cambios))[0, 1])
+
+    tipico = probabilidad({})
+    aportes = {
+        col: probabilidad({col: valor}) - tipico
+        for col, valor in entradas.items()
+        if valor != medianas[col]
+    }
+    return tipico, sorted(aportes.items(), key=lambda item: item[1], reverse=True)
 
 
 def leer_lote(contenido: bytes) -> pd.DataFrame:

@@ -83,4 +83,5 @@ src/scoring.py           semáforo, perfiles del simulador, lotes y métricas de
 src/pipeline_diagram.py  Figura 1 del informe
 notebooks/               notebooks de P2 y P3
 reports/                 evidencias y figuras para el informe
+reports/evidencia_viii4/ capturas de la app y verificación app vs notebook
 ```
