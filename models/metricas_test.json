@@ -1,0 +1,10 @@
+{
+  "F1-Score (Dropout)": 0.8075,
+  "Precision (Dropout)": 0.8606,
+  "Recall (Dropout)": 0.7606,
+  "Accuracy": 0.8836,
+  "ROC-AUC": 0.9343,
+  "modelo": "Gradient Boosting",
+  "umbral_operativo": 0.4,
+  "umbral_optimo_f1": 0.3904
+}
