@@ -1,0 +1,465 @@
+/* ==========================================================================
+   Polaris ML — Modern Minimalist Design System
+   Paleta: Azul Noche (#0c1938) & Blanco Puro (#ffffff)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    /* Azul Noche & Matices */
+    --c-night-950:      #060c1d;
+    --c-night-900:      #0c1938;
+    --c-night-800:      #13244d;
+    --c-night-700:      #1a3366;
+    
+    /* Acentos de luz */
+    --c-blue-accent:    #2563eb;
+    --c-blue-light:     #60a5fa;
+    --c-blue-soft:      #eff6ff;
+    --c-blue-border:    #dbeafe;
+    
+    /* Blanco y Neutros */
+    --c-surface:        #ffffff;
+    --c-ground:         #fafbfe;
+    --c-border:         #e2e8f0;
+    --c-border-subtle:  #edf2f7;
+    
+    /* Texto */
+    --c-text-primary:   #0c1938;
+    --c-text-secondary: #475569;
+    --c-text-muted:     #94a3b8;
+    
+    /* Sombras multicapa hiperfinas */
+    --shadow-sm:        0 1px 2px rgba(12, 25, 56, 0.04);
+    --shadow-md:        0 4px 16px -2px rgba(12, 25, 56, 0.06), 0 1px 3px rgba(12, 25, 56, 0.03);
+    --shadow-lg:        0 12px 32px -4px rgba(12, 25, 56, 0.08), 0 2px 6px rgba(12, 25, 56, 0.03);
+    
+    --radius-sm:        8px;
+    --radius-md:        12px;
+    --radius-lg:        16px;
+}
+
+html, body, [class*="css"] {
+    font-family: var(--font-sans);
+    color: var(--c-text-primary);
+    background-color: var(--c-ground);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Barra Superior (Minimal Header) ---------- */
+.polaris-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.polaris-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.polaris-logo-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: var(--c-night-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.25rem;
+    box-shadow: 0 2px 8px rgba(12, 25, 56, 0.2);
+}
+
+.polaris-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--c-night-900);
+    letter-spacing: -0.03em;
+}
+
+.polaris-subtitle {
+    font-size: 0.78rem;
+    color: var(--c-text-muted);
+    font-weight: 500;
+}
+
+/* ---------- Page Header Minimalista (Sin cajas oscuras pesadas) ---------- */
+.page-hero {
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--c-border);
+}
+
+.page-hero-tag {
+    display: inline-block;
+    font-size: 0.70rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--c-blue-accent);
+    background: var(--c-blue-soft);
+    padding: 3px 10px;
+    border-radius: 9999px;
+    border: 1px solid var(--c-blue-border);
+    margin-bottom: 8px;
+}
+
+.page-hero-title {
+    font-size: 1.85rem !important;
+    font-weight: 800 !important;
+    color: var(--c-night-900) !important;
+    letter-spacing: -0.03em !important;
+    line-height: 1.2 !important;
+    margin: 0 0 6px 0 !important;
+}
+
+.page-hero-desc {
+    font-size: 0.92rem;
+    color: var(--c-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 820px;
+}
+
+/* ---------- Stat Cards Minimalistas ---------- */
+.stat-card-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 140ms ease-out, box-shadow 140ms ease-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: #cbd5e1;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--c-text-muted);
+    margin-bottom: 6px;
+}
+
+.stat-value {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--c-night-900);
+    letter-spacing: -0.03em;
+    font-family: var(--font-sans);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-meta {
+    margin-top: 6px;
+    font-size: 0.80rem;
+    color: var(--c-text-secondary);
+}
+
+/* ---------- Workflow Steps (01, 02, 03) ---------- */
+.workflow-step {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+    transition: all 140ms ease-out;
+}
+
+.workflow-step:hover {
+    box-shadow: var(--shadow-md);
+    border-color: #cbd5e1;
+}
+
+.step-num {
+    font-family: var(--font-mono);
+    font-size: 0.80rem;
+    font-weight: 700;
+    color: var(--c-blue-accent);
+    background: var(--c-blue-soft);
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.step-title {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--c-night-900);
+    margin-bottom: 6px;
+}
+
+.step-body {
+    font-size: 0.86rem;
+    color: var(--c-text-secondary);
+    line-height: 1.5;
+}
+
+/* ---------- Semáforo Card Minimalista ---------- */
+.risk-indicator-box {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 20px;
+}
+
+.risk-scale-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    border: 1px solid var(--c-border-subtle);
+}
+
+.risk-scale-item.green { background: #f0fdf4; border-color: #bbf7d0; }
+.risk-scale-item.yellow { background: #fffbeb; border-color: #fef08a; }
+.risk-scale-item.red { background: #fef2f2; border-color: #fecaca; }
+
+/* ---------- Barra Lateral (Sidebar) Minimalista ---------- */
+[data-testid="stSidebar"] {
+    background-color: var(--c-night-900) !important;
+    border-right: 1px solid #1e293b !important;
+}
+
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+}
+
+[data-testid="stSidebar"] h4 {
+    color: var(--c-blue-light) !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+}
+
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] div {
+    color: #f1f5f9 !important;
+}
+
+[data-testid="stSidebar"] strong {
+    color: #ffffff !important;
+}
+
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {
+    color: #94a3b8 !important;
+    font-size: 0.80rem !important;
+}
+
+[data-testid="stSidebar"] hr {
+    border-color: #1e293b !important;
+}
+
+[data-testid="stSidebar"] .stSlider label {
+    font-weight: 600 !important;
+    color: #ffffff !important;
+}
+
+/* ==========================================================================
+   BARRA DE NAVEGACIÓN SEGMENTADA (NAVBAR MODERNO)
+   Eliminación de bordes rígidos y estilo "Floating Pill Bar"
+   ========================================================================== */
+[data-testid="stSegmentedControl"] {
+    background: #ffffff !important;
+    padding: 5px !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(12, 25, 56, 0.04), 0 4px 12px -2px rgba(12, 25, 56, 0.03) !important;
+    margin-bottom: 22px !important;
+    gap: 6px !important;
+    display: inline-flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+}
+
+[data-testid="stSegmentedControl"] > div {
+    border: none !important;
+    background: transparent !important;
+    gap: 6px !important;
+    box-shadow: none !important;
+}
+
+[data-testid="stSegmentedControl"] button {
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    padding: 8px 18px !important;
+    border: 1px solid transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #475569 !important;
+    background: transparent !important;
+    transition: all 140ms ease-out !important;
+    cursor: pointer !important;
+    margin: 0 !important;
+}
+
+[data-testid="stSegmentedControl"] button:hover:not([aria-checked="true"]):not([aria-selected="true"]) {
+    background: #f1f5f9 !important;
+    color: #0c1938 !important;
+    border-color: transparent !important;
+}
+
+/* Estado ACTIVO en Streamlit: captura aria-checked y aria-selected */
+[data-testid="stSegmentedControl"] button[aria-checked="true"],
+[data-testid="stSegmentedControl"] button[aria-selected="true"],
+[data-testid="stSegmentedControl"] [data-baseweb="button-group"] [aria-checked="true"],
+[data-testid="stSegmentedControl"] button[data-checked="true"] {
+    background: #0c1938 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 8px rgba(12, 25, 56, 0.25) !important;
+    border: 1px solid #0c1938 !important;
+}
+
+[data-testid="stSegmentedControl"] button[aria-checked="true"] p,
+[data-testid="stSegmentedControl"] button[aria-checked="true"] span,
+[data-testid="stSegmentedControl"] button[aria-checked="true"] div,
+[data-testid="stSegmentedControl"] button[aria-selected="true"] p,
+[data-testid="stSegmentedControl"] button[aria-selected="true"] span,
+[data-testid="stSegmentedControl"] button[aria-selected="true"] div {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* Desactivar cualquier línea divisoria entre botones de Streamlit */
+[data-testid="stSegmentedControl"] button::before,
+[data-testid="stSegmentedControl"] button::after,
+[data-testid="stSegmentedControl"] [data-baseweb="button-group"] > div {
+    display: none !important;
+    border: none !important;
+}
+
+/* ---------- Botones Generales ---------- */
+.stButton > button {
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    padding: 8px 18px !important;
+    border: 1px solid var(--c-border) !important;
+    background: var(--c-surface) !important;
+    color: var(--c-night-900) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 120ms ease-out !important;
+}
+
+.stButton > button:hover {
+    border-color: var(--c-night-900) !important;
+    color: var(--c-night-900) !important;
+    box-shadow: var(--shadow-md) !important;
+    transform: translateY(-1px) !important;
+}
+
+.stButton > button:active {
+    transform: scale(0.98) !important;
+}
+
+/* Botón primario */
+.stButton > button[kind="primary"] {
+    background: var(--c-night-900) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--c-night-900) !important;
+}
+
+.stButton > button[kind="primary"]:hover {
+    background: var(--c-night-800) !important;
+    box-shadow: 0 4px 14px rgba(12, 25, 56, 0.25) !important;
+}
+
+/* ---------- Pestañas (Tabs) ---------- */
+[data-testid="stTabs"] [data-baseweb="tab-list"] {
+    gap: 8px !important;
+    border-bottom: 1px solid var(--c-border) !important;
+}
+
+[data-testid="stTabs"] [data-baseweb="tab"] {
+    font-weight: 600 !important;
+    font-size: 0.90rem !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 8px 16px !important;
+    color: var(--c-text-muted) !important;
+    border: none !important;
+    transition: all 140ms ease-out !important;
+}
+
+[data-testid="stTabs"] [aria-selected="true"] {
+    color: var(--c-night-900) !important;
+    background: var(--c-blue-soft) !important;
+    border-bottom: 2px solid var(--c-night-900) !important;
+}
+
+/* ---------- Badges de estado ---------- */
+.badge-service-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #0c1938;
+    color: #ffffff;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #60a5fa;
+    box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.6);
+    animation: pulse-dot-blue 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot-blue {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.5); }
+    50%      { box-shadow: 0 0 0 6px rgba(96, 165, 250, 0); }
+}
+
+.badge-model-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    color: #0c1938;
+    padding: 5px 14px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1px solid #cbd5e1;
+}

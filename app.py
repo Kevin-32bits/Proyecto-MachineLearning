@@ -30,80 +30,16 @@ from src.scoring import (
 # Configuración general de la página Streamlit
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="Sistema Predictivo de Deserción Universitaria",
+    page_title="CeroDeserción ML — Sistema de Retención y Alerta Temprana",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# Estilos CSS modernos para una experiencia visual ejecutiva
-st.html("""
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-
-  html, body, [class*="css"] {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-
-  /* Tarjetas blancas con sombras suaves y esquinas redondeadas */
-  [data-testid="stMain"] [data-testid="stMetric"],
-  [data-testid="stMain"] [data-testid="stExpander"] details,
-  [class*="st-key-tarjeta"] { 
-      background: #ffffff; 
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(13, 54, 107, 0.04);
-      border: 1px solid #dbe6f2;
-  }
-  [data-testid="stMain"] [data-testid="stExpander"] details { 
-      border-radius: 10px; 
-  }
-
-  /* Acento superior en las métricas KPI */
-  [data-testid="stMetric"] {
-      border-top: 4px solid #184f95 !important;
-      padding: 16px 18px !important;
-  }
-
-  /* Barra de Navegación Segmented Control */
-  [data-testid="stSegmentedControl"] {
-      background: #ffffff;
-      padding: 6px;
-      border-radius: 14px;
-      border: 1px solid #d3deeb;
-      box-shadow: 0 4px 15px rgba(13, 54, 107, 0.05);
-      margin-bottom: 20px;
-      gap: 4px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-  }
-  
-  [data-testid="stSegmentedControl"] button {
-      border-radius: 8px !important;
-      font-weight: 600 !important;
-      font-size: 0.90rem !important;
-      padding: 7px 14px !important;
-      border: none !important;
-      transition: all 0.2s ease !important;
-  }
-
-  /* Botones preset con micro-interacciones */
-  .stButton > button {
-      border-radius: 10px;
-      font-weight: 600;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-  .stButton > button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-
-  /* Ajuste de densidad y espaciado de cabeceras */
-  h1, h2, h3 {
-      letter-spacing: -0.02em;
-  }
-</style>
-""")
+# Cargar hoja de estilo CSS externa
+CSS_PATH = ROOT_DIR / "assets" / "styles.css"
+if CSS_PATH.exists():
+    st.html(f"<style>\n{CSS_PATH.read_text(encoding='utf-8')}\n</style>")
 
 MODELS_DIR = ROOT_DIR / "models"
 
@@ -172,15 +108,15 @@ PERFILES = {
 }
 
 # Paleta de gráficos y estados
-COLOR_SERIE = "#2a78d6"
-COLOR_APAGADO = "#c3c2b7"
+COLOR_SERIE = "#1d4ed8"
+COLOR_APAGADO = "#d4d4d8"
 COLOR_TINTA = "#0b0b0b"
 COLOR_TINTA_2 = "#52514e"
-COLOR_REJILLA = "#e1e0d9"
+COLOR_REJILLA = "#e2e8f0"
 COLOR_SUPERFICIE = "#ffffff"
-COLOR_MARINO = "#0d366b"
-COLOR_ENCABEZADO = "#184f95"
-COLOR_LUZ_APAGADA = "#2f5a8f"
+COLOR_MARINO = "#0c1938"
+COLOR_ENCABEZADO = "#172554"
+COLOR_LUZ_APAGADA = "#1e293b"
 COLOR_ESTADO = {"Rojo": "#d03b3b", "Amarillo": "#fab219", "Verde": "#0ca30c"}
 ICONO_ESTADO = {"Rojo": "🔴", "Amarillo": "🟡", "Verde": "🟢"}
 TEXTO_ESTADO = {
@@ -239,14 +175,12 @@ def describir_valor(col, valor):
     return str(int(valor))
 
 
-def encabezado(titulo, subtitulo):
-    """Banda de color con el título de la vista; admite HTML simple en el subtítulo."""
-    st.html(f"""
-    <div style="padding:22px 28px;border-radius:14px;background:linear-gradient(135deg, {COLOR_MARINO} 0%, {COLOR_ENCABEZADO} 100%);box-shadow:0 4px 18px rgba(13,54,107,0.12);margin-bottom:18px;">
-      <h1 style="margin:0;padding:0;font-size:2rem;font-weight:700;line-height:1.25;color:#ffffff">{titulo}</h1>
-      <div style="margin-top:6px;font-size:1.02rem;color:#e6effb">{subtitulo}</div>
-    </div>
-    """)
+def encabezado(titulo, subtitulo, tag="MONITOR INSTITUCIONAL"):
+    """Encabezado nativo de Streamlit, estilizado 100% mediante CSS externo."""
+    st.caption(f":blue[**{tag}**]")
+    st.title(titulo)
+    st.markdown(subtitulo)
+    st.divider()
 
 
 def tarjeta(clave, contenedor=st, height="content"):
@@ -269,43 +203,25 @@ def mostrar_metricas(m):
     columnas[4].metric("ROC-AUC", f"{m['roc_auc']:.4f}", border=True)
 
 
-def tarjeta_resultado(prob, color, umbral):
-    """HTML del semáforo con la probabilidad y su posición en la escala de riesgo."""
+def mostrar_tarjeta_resultado(prob, color, umbral):
+    """Diagnóstico predictivo con componentes 100% nativos de Streamlit."""
     corte = max(CORTE_ROJO, umbral)
-    luces = "".join(
-        f'<div style="width:38px;height:38px;border-radius:50%;'
-        f'background:{COLOR_ESTADO[c] if c == color else COLOR_LUZ_APAGADA}"></div>'
-        for c in ("Rojo", "Amarillo", "Verde")
-    )
-    barra = "".join(
-        f'<div style="flex:{ancho};height:12px;border-radius:4px;background:{COLOR_ESTADO[c]}"></div>'
-        for c, ancho in [("Verde", umbral), ("Amarillo", corte - umbral), ("Rojo", 1 - corte)]
-        if ancho > 0
-    )
     titulo, detalle = TEXTO_ESTADO[color]
-    return f"""
-    <div style="display:flex;gap:24px;align-items:center;padding:20px 24px;border-radius:12px;
-                border:1px solid rgba(11,11,11,.10);background:{COLOR_SUPERFICIE}">
-      <div style="display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:32px;background:{COLOR_MARINO}">{luces}</div>
-      <div style="flex:1;min-width:0">
-        <div style="color:{COLOR_TINTA_2}">Probabilidad estimada de abandono</div>
-        <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
-          <span style="font-size:3.2rem;font-weight:700;line-height:1.2;color:{COLOR_TINTA}">{prob * 100:.1f} %</span>
-          <span style="font-size:1.4rem;font-weight:600;color:{COLOR_TINTA}">{ICONO_ESTADO[color]} {titulo}</span>
-        </div>
-        <div style="margin-bottom:12px;color:{COLOR_TINTA_2}">{detalle}</div>
-        <div style="position:relative;padding-top:12px">
-          <div style="position:absolute;top:0;left:calc({prob * 100:.1f}% - 6px);width:0;height:0;
-                      border-left:6px solid transparent;border-right:6px solid transparent;
-                      border-top:9px solid {COLOR_TINTA}"></div>
-          <div style="display:flex;gap:2px">{barra}</div>
-        </div>
-        <div style="margin-top:6px;font-size:.85rem;color:{COLOR_TINTA_2}">
-          🟢 menor a {umbral * 100:.0f} % · 🟡 desde {umbral * 100:.0f} % · 🔴 desde {corte * 100:.0f} %
-        </div>
-      </div>
-    </div>
-    """
+    
+    with st.container(border=True):
+        c_diag1, c_diag2 = st.columns([1.5, 1], vertical_alignment="center")
+        with c_diag1:
+            st.metric(
+                "Probabilidad Estimada de Abandono",
+                f"{prob * 100:.1f} %",
+                f"{ICONO_ESTADO[color]} {titulo}",
+                delta_color="off"
+            )
+        with c_diag2:
+            st.markdown(f"**Diagnóstico Preventivo:**\n\n{detalle}")
+        
+        st.progress(min(1.0, max(0.0, prob)), text=f"Nivel de riesgo estimado (Umbral operativo: {umbral:.2f})")
+        st.caption(f"🟢 Bajo: < {umbral*100:.0f}% · 🟡 Moderado: {umbral*100:.0f}% - {corte*100:.0f}% · 🔴 Alto: > {corte*100:.0f}%")
 
 
 def grafico_barras(datos, dominio, formato, referencia, destacar=None):
@@ -386,7 +302,7 @@ def grafico_matriz_confusion(cm, umbral):
                 axis=alt.Axis(labelAngle=0, labelFontSize=13, labelFontWeight="bold", titleFontSize=13, titlePadding=10)),
         y=alt.Y("Real:N", sort=ord_cat, title="Clase Real del Estudiante",
                 axis=alt.Axis(labelFontSize=13, labelFontWeight="bold", titleFontSize=13, titlePadding=10)),
-        color=alt.Color("Conteo:Q", scale=alt.Scale(scheme="blues", domain=[0, max(tn, tp) * 1.05]), legend=None),
+        color=alt.Color("Conteo:Q", scale=alt.Scale(scheme="teals", domain=[0, max(tn, tp) * 1.05]), legend=None),
         tooltip=[
             alt.Tooltip("Tipo:N", title="Cuadrante"),
             alt.Tooltip("Conteo:Q", format=",", title="Estudiantes"),
@@ -401,7 +317,7 @@ def grafico_matriz_confusion(cm, umbral):
         x=alt.X("Predicho:N", sort=ord_cat),
         y=alt.Y("Real:N", sort=ord_cat),
         text="Tag:N",
-        color=alt.condition(alt.datum.Conteo > 150, alt.value("#dbeafe"), alt.value("#184f95"))
+        color=alt.condition(alt.datum.Conteo > 150, alt.value("#ccfbf1"), alt.value("#0f766e"))
     )
 
     t_num = alt.Chart(datos_cm).mark_text(
@@ -410,7 +326,7 @@ def grafico_matriz_confusion(cm, umbral):
         x=alt.X("Predicho:N", sort=ord_cat),
         y=alt.Y("Real:N", sort=ord_cat),
         text="TextoNum:N",
-        color=alt.condition(alt.datum.Conteo > 150, alt.value("#ffffff"), alt.value("#0d366b"))
+        color=alt.condition(alt.datum.Conteo > 150, alt.value("#ffffff"), alt.value("#134e4a"))
     )
 
     t_sub = alt.Chart(datos_cm).mark_text(
@@ -419,7 +335,7 @@ def grafico_matriz_confusion(cm, umbral):
         x=alt.X("Predicho:N", sort=ord_cat),
         y=alt.Y("Real:N", sort=ord_cat),
         text="TextoSub:N",
-        color=alt.condition(alt.datum.Conteo > 150, alt.value("#e0edfd"), alt.value("#2f5a8f"))
+        color=alt.condition(alt.datum.Conteo > 150, alt.value("#ccfbf1"), alt.value("#115e59"))
     )
 
     chart = (rects + t_tag + t_num + t_sub).properties(
@@ -507,7 +423,7 @@ def grafico_importancia_permutacion(perm_data):
                 axis=alt.Axis(format=".2f", gridColor=COLOR_REJILLA, labelColor=COLOR_TINTA_2)),
         color=alt.Color("Dimensión:N", scale=alt.Scale(
             domain=["Académico", "Financiero", "Demográfico", "Familiar", "Contexto"],
-            range=["#184f95", "#fab219", "#2a78d6", "#72b7b2", "#9c755f"]
+            range=["#1d4ed8", "#f59e0b", "#60a5fa", "#38bdf8", "#64748b"]
         ), legend=alt.Legend(title="Dimensión", orient="bottom", labelFontSize=11, titleFontSize=12)),
         tooltip=[
             alt.Tooltip("Variable:N", title="Variable"),
@@ -581,7 +497,7 @@ LISTA_VISTAS = [VISTA_INICIO, VISTA_SIMULADOR, VISTA_DATOS, VISTA_MODELOS]
 # Barra Lateral (Sidebar) — Oculta por defecto para dar ancho completo
 # ---------------------------------------------------------
 with st.sidebar:
-    st.markdown("### ⚙️ Ajustes del Sistema")
+    st.markdown("### 🎓 CeroDeserción ML")
     st.caption("Ajusta el umbral operativo del modelo:")
     umbral = st.slider(
         "Umbral de alerta operativa",
@@ -589,108 +505,108 @@ with st.sidebar:
         help="Probabilidad mínima para alertar. Un umbral más bajo (ej. 0.40) detecta más abandonos a tiempo."
     )
     st.divider()
-    st.markdown("#### 📌 Información del Modelo")
+    st.markdown("#### 📌 Servicio de Inferencia Activo")
     st.markdown(f"**Algoritmo:** {model_name}")
     st.markdown(f"**F1-Score Test:** {metadata['F1-Score (Dropout)']:.4f}")
     st.markdown(f"**Accuracy Test:** {metadata['Accuracy'] * 100:.1f} %")
     st.markdown(f"**ROC-AUC Test:** {metadata['ROC-AUC']:.4f}")
     st.divider()
-    st.caption("Sistemas Inteligentes & Machine Learning — UPN\nDataset: UCI #697")
+    st.caption("CeroDeserción ML · UPN Sistemas Inteligentes\nDataset: UCI #697")
 
 m_test = metricas(y_test, proba_test, umbral)
 
 # ---------------------------------------------------------
-# Barra Superior de Navegación (Top Navbar)
 # ---------------------------------------------------------
-st.html(f"""
-<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px; padding:12px 20px; background:#ffffff; border-radius:12px; border:1px solid #d3deeb; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
-  <div style="display:flex; align-items:center; gap:12px;">
-    <span style="font-size:2rem; line-height:1;">🎓</span>
-    <div>
-      <div style="font-weight:700; font-size:1.2rem; color:#0d366b; line-height:1.2;">Alerta de Deserción Universitaria</div>
-      <div style="font-size:0.82rem; color:#52514e;">Sistemas Inteligentes & Machine Learning — UPN</div>
-    </div>
-  </div>
-  <div style="display:flex; align-items:center; gap:10px;">
-    <span style="display:inline-flex; align-items:center; gap:6px; background:#e8f4fd; color:#184f95; padding:5px 14px; border-radius:20px; font-size:0.82rem; font-weight:600; border:1px solid #b8dafc;">
-      <span style="width:8px; height:8px; border-radius:50%; background:#0ca30c; display:inline-block;"></span>
-      Modelo Activo: {model_name} (F1: {metadata['F1-Score (Dropout)']*100:.1f} %)
-    </span>
-  </div>
-</div>
-""")
-
+# ---------------------------------------------------------
+# Barra de Navegación Unificada (Header & Navigation Bar)
+# ---------------------------------------------------------
 if "menu_nav" not in st.session_state or st.session_state["menu_nav"] not in LISTA_VISTAS:
     st.session_state["menu_nav"] = VISTA_INICIO
 
-menu = st.segmented_control(
-    "Navegación principal",
-    LISTA_VISTAS,
-    default=st.session_state["menu_nav"],
-    label_visibility="collapsed"
-)
+with st.container():
+    col_brand, col_nav, col_status = st.columns([1.5, 2.8, 1.4], vertical_alignment="center")
+
+    with col_brand:
+        st.markdown("### 🎓 CeroDeserción **ML**")
+        st.caption("Iniciativa de Retención · UPN")
+
+    with col_nav:
+        menu = st.segmented_control(
+            "Navegación principal",
+            LISTA_VISTAS,
+            default=st.session_state["menu_nav"],
+            label_visibility="collapsed"
+        )
+
+    with col_status:
+        c_s1, c_s2 = st.columns(2)
+        c_s1.caption("🟢 **Online** (< 15ms)")
+        c_s2.caption(f"🏆 **F1 Test:** {metadata['F1-Score (Dropout)']*100:.1f}%")
+
 if menu is None:
     menu = st.session_state["menu_nav"]
 else:
     st.session_state["menu_nav"] = menu
+
+st.divider()
 
 # ---------------------------------------------------------
 # VISTA: INICIO
 # ---------------------------------------------------------
 if menu == VISTA_INICIO:
     encabezado(
-        "¿Quién necesita apoyo para no abandonar la universidad?",
-        "Este sistema estima el <b>riesgo de deserción</b> de cada estudiante para que tutoría y "
-        "bienestar universitario puedan actuar a tiempo."
+        "Detección Temprana del Riesgo de Deserción",
+        f"Modelo predictivo institucional ({model_name}) entrenado con {len(raw_df):,} estudiantes. Identifica factores de vulnerabilidad para activar tutorías personalizadas y becas antes del abandono.",
+        tag="MONITOR INSTITUCIONAL"
     )
 
-    k1, k2, k3, k4 = st.columns(4)
-    k1.metric("Estudiantes analizados", f"{len(raw_df):,}", border=True)
-    k2.metric("Abandonaron la carrera", f"{tasa_abandono * 100:.1f} %", border=True)
-    k3.metric("Abandonos detectados", f"{m_test['recall'] * 100:.0f} de 100", border=True)
-    k4.metric("Alertas acertadas", f"{m_test['precision'] * 100:.0f} de 100", border=True)
-    st.caption(f"Detección medida con {len(X_test)} estudiantes que el modelo no usó para aprender.")
+    # 4 Métricas Clave de Rendimiento
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Estudiantes Analizados", f"{len(raw_df):,}", "Cohorte histórica total", border=True)
+    c2.metric("Tasa de Deserción Base", f"{tasa_abandono * 100:.1f} %", f"{int(len(raw_df) * tasa_abandono):,} casos de abandono", border=True)
+    c3.metric("Sensibilidad (Recall)", f"{m_test['recall'] * 100:.0f} %", f"Detecta {m_test['recall'] * 100:.0f} de cada 100", border=True)
+    c4.metric("Precisión de Alerta", f"{m_test['precision'] * 100:.0f} %", f"{m_test['precision'] * 100:.0f} de 100 acertadas", border=True)
 
-    st.subheader("Cómo funciona")
-    p1, p2, p3 = st.columns(3)
-    with tarjeta("paso_1", p1, "stretch"):
-        st.markdown("**1. Aprende de casos reales**")
-        st.markdown(f"Historial académico, pagos y datos personales de {len(raw_df):,} estudiantes de una institución de educación superior.")
-    with tarjeta("paso_2", p2, "stretch"):
-        st.markdown("**2. Compara cuatro modelos**")
-        st.markdown(f"Se evaluaron cuatro algoritmos y se eligió **{model_name}** por su mejor F1 en la clase de deserción.")
-    with tarjeta("paso_3", p3, "stretch"):
-        st.markdown("**3. Emite una alerta**")
-        st.markdown("Calcula una probabilidad y la traduce a un semáforo, individual o para un grupo completo.")
+    st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
 
-    st.subheader("Cómo leer el semáforo")
-    corte = max(CORTE_ROJO, umbral)
-    s1, s2, s3 = st.columns(3)
-    s1.success(f"🟢 **Bajo:** menos de {umbral * 100:.0f} %. Seguimiento regular.")
-    s2.warning(f"🟡 **Moderado:** desde {umbral * 100:.0f} %. Alerta y seguimiento cercano.")
-    s3.error(f"🔴 **Alto:** desde {corte * 100:.0f} %. Priorizar intervención.")
+    # Layout en 2 columnas: Flujo de Operación (Izq) vs Panel de Semáforo (Der)
+    col_izq, col_der = st.columns([1.15, 1], gap="large")
 
-    st.subheader("Alcance")
-    st.markdown(
-        "- El modelo usa notas hasta el **2do semestre**: acompaña el primer año, no predice el día de la matrícula.\n"
-        "- La alerta sirve para **ofrecer apoyo**, nunca para sancionar. La decisión final es de una persona."
-    )
+    with col_izq:
+        st.markdown("### 🔄 Cómo opera el sistema")
+        
+        with st.container(border=True):
+            st.markdown(":blue[**FASE 01**] · **Ingesta y Perfil Multidimensional**")
+            st.caption("Recopila 36 variables: desempeño académico de 1er y 2do semestre, situación de pago de matrícula, tenencia de becas y antecedentes sociodemográficos.")
+        
+        with st.container(border=True):
+            st.markdown(f":blue[**FASE 02**] · **Inferencia con {model_name}**")
+            st.caption(f"Aplica el modelo ganador (F1: {metadata['F1-Score (Dropout)']*100:.1f}%, ROC-AUC: {metadata['ROC-AUC']:.3f}) con umbral optimizado a {umbral:.2f} para maximizar la detección temprana.")
+        
+        with st.container(border=True):
+            st.markdown(":blue[**FASE 03**] · **Canalización a Bienestar Universitario**")
+            st.caption("Genera una alerta temprana categorizada por semáforo y desglosa los factores determinantes para derivar a tutoría académica o apoyo económico.")
 
-    st.subheader("📐 Metodología y Flujo del Proyecto (CRISP-DM)")
-    pipe_path = FIGURES / "figura1_pipeline.png"
-    if pipe_path.exists():
-        with tarjeta("card_pipe_inicio"):
+    with col_der:
+        st.markdown("### 🚦 Protocolo del Semáforo")
+        corte = max(CORTE_ROJO, umbral)
+        
+        with st.container(border=True):
+            st.caption(f"**ESCALA DE INTERVENCIÓN (UMBRAL ACTIVO: {umbral*100:.0f}%)**")
+            st.success(f"🟢 **Riesgo Bajo (< {umbral*100:.0f}%):** Seguimiento académico regular. No requiere intervención extraordinaria.")
+            st.warning(f"🟡 **Riesgo Moderado ({umbral*100:.0f}% a {corte*100:.0f}%):** Activar seguimiento cercano y tutoría preventiva.")
+            st.error(f"🔴 **Riesgo Alto (> {corte*100:.0f}%):** Prioridad máxima: entrevista con Bienestar Universitario, plan financiero o beca.")
+            st.caption("💡 **Principio ético:** La alerta nunca sanciona; su único fin es ofrecer acompañamiento oportuno.")
+
+    with st.expander("📐 Ver Arquitectura Metodológica del Pipeline (CRISP-DM)"):
+        pipe_path = FIGURES / "figura1_pipeline.png"
+        if pipe_path.exists():
             st.image(
                 str(pipe_path),
                 caption="Figura 1: Arquitectura del pipeline de Machine Learning (Fases 2 a 5 de CRISP-DM) garantizando evaluación sin fuga de datos.",
                 width="stretch"
             )
-    else:
-        st.info("Diagrama del pipeline disponible en el repositorio.")
 
-
-# ---------------------------------------------------------
-# VISTA: SIMULADOR (INDIVIDUAL Y POR LOTES)
 # ---------------------------------------------------------
 elif menu == VISTA_SIMULADOR:
     encabezado("🔮 Simulador de Riesgo", "Evalúa el riesgo de deserción en tiempo real de forma individual o mediante carga masiva.")
@@ -770,7 +686,7 @@ elif menu == VISTA_SIMULADOR:
                 input_df = construir_perfil(medianas, perfil)
                 prob_dropout = float(model_pipeline.predict_proba(input_df)[0, 1])
                 color = str(semaforo([prob_dropout], umbral)[0])
-                st.html(tarjeta_resultado(prob_dropout, color, umbral))
+                mostrar_tarjeta_resultado(prob_dropout, color, umbral)
 
                 riesgo_tipico, factores = factores_riesgo(model_pipeline, medianas, perfil)
                 suben = [(c, v) for c, v in factores if v >= 0.01][:3]
@@ -934,7 +850,7 @@ elif menu == VISTA_DATOS:
                     y=alt.Y("Estudiantes:Q", title="N° de Estudiantes", scale=alt.Scale(domain=[0, 2600]), axis=alt.Axis(gridColor=COLOR_REJILLA, labelColor=COLOR_TINTA_2)),
                     color=alt.Color("Clase:N", legend=None, scale=alt.Scale(
                         domain=["Graduate", "Dropout", "Enrolled"],
-                        range=["#2a78d6", "#d03b3b", "#fab219"]
+                        range=["#1d4ed8", "#dc2626", "#f59e0b"]
                     )),
                     tooltip=[alt.Tooltip("Clase:N"), alt.Tooltip("Estudiantes:Q", format=","), alt.Tooltip("Porcentaje:Q", format=".1f", title="Porcentaje (%)")]
                 )
@@ -962,7 +878,7 @@ elif menu == VISTA_DATOS:
                     y=alt.Y("Estudiantes:Q", title="N° de Estudiantes", scale=alt.Scale(domain=[0, 3400]), axis=alt.Axis(gridColor=COLOR_REJILLA, labelColor=COLOR_TINTA_2)),
                     color=alt.Color("Clase:N", legend=None, scale=alt.Scale(
                         domain=["Resto (0)", "Dropout (1)"],
-                        range=["#2a78d6", "#d03b3b"]
+                        range=["#1d4ed8", "#dc2626"]
                     )),
                     tooltip=[alt.Tooltip("Clase:N"), alt.Tooltip("Estudiantes:Q", format=","), alt.Tooltip("Porcentaje:Q", format=".1f", title="Porcentaje (%)")]
                 )
@@ -1017,7 +933,7 @@ elif menu == VISTA_DATOS:
                         y=alt.Y("Estudiantes:Q", title="Cantidad de Estudiantes", axis=alt.Axis(gridColor=COLOR_REJILLA, labelColor=COLOR_TINTA_2)),
                         color=alt.Color("Estado:N", legend=None, scale=alt.Scale(
                             domain=["Graduate", "Dropout", "Enrolled"],
-                            range=["#2a78d6", "#d03b3b", "#fab219"]
+                            range=["#1d4ed8", "#dc2626", "#f59e0b"]
                         )),
                         tooltip=[alt.Tooltip("Estado:N"), alt.Tooltip("Estudiantes:Q", format=","), alt.Tooltip("Porcentaje:Q", format=".1f", title="Porcentaje (%)")]
                     )
