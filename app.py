@@ -699,14 +699,13 @@ model_name = metadata["modelo"]
 medianas = X_train.median().to_dict()
 tasa_abandono = (raw_df[TARGET_COL] == POSITIVE_LABEL).mean()
 
-VISTA_INICIO = "🏠 Inicio y Contexto"
-VISTA_OBJETIVOS = "🎯 Objetivos y Alcance"
+VISTA_INICIO = "🏠 Contexto y Objetivos"
 VISTA_DATOS = "📊 Datos y Metodología"
-VISTA_MODELOS = "🏆 Modelos y Resultados (OE1–OE5)"
+VISTA_MODELOS = "🏆 Modelos y Resultados"
 VISTA_SIMULADOR = "🔮 Simulador en Vivo"
 VISTA_CONCLUSIONES = "📌 Conclusiones y Ética"
 
-LISTA_VISTAS = [VISTA_INICIO, VISTA_OBJETIVOS, VISTA_DATOS, VISTA_MODELOS, VISTA_SIMULADOR, VISTA_CONCLUSIONES]
+LISTA_VISTAS = [VISTA_INICIO, VISTA_DATOS, VISTA_MODELOS, VISTA_SIMULADOR, VISTA_CONCLUSIONES]
 
 # ---------------------------------------------------------
 # Barra Lateral (Sidebar) — Oculta por defecto para dar ancho completo
@@ -768,7 +767,7 @@ else:
     st.session_state["menu_nav"] = menu
 
 # ---------------------------------------------------------
-# VISTA 1: INICIO Y CONTEXTO (CAPÍTULO I DEL INFORME)
+# VISTA 1: CONTEXTO Y OBJETIVOS (CAPÍTULO I DEL INFORME)
 # ---------------------------------------------------------
 if menu == VISTA_INICIO:
     encabezado(
@@ -776,133 +775,124 @@ if menu == VISTA_INICIO:
         "De un enfoque reactivo tradicional a la <b>detección temprana del riesgo de deserción</b> mediante Machine Learning."
     )
 
-    n1, n2, n3 = st.columns(3)
-    n1.metric("🌍 Nivel Internacional (OCDE)", "20 % – 30 %", "Tasa global de abandono superior", delta_color="off", delta_arrow="off", border=True)
-    n2.metric("🇵🇪 Nivel Nacional (Perú)", "~174,000", "Estudiantes desertaron en 2020", delta_color="off", delta_arrow="off", border=True)
-    n3.metric("📍 Nivel Local (Trujillo)", "25.00 %", "Índice regional (2021–2022)", delta_color="off", delta_arrow="off", border=True)
-
-    col_react, col_proact = st.columns(2, gap="large")
-    with col_react:
-        with tarjeta("enfoque_reactivo", height="stretch"):
-            st.html("""
-            <div style="padding:4px 2px;">
-              <div style="display:inline-block;background:#fee2e2;color:#b91c1c;font-weight:700;font-size:0.78rem;padding:4px 10px;border-radius:20px;margin-bottom:10px;">⚠️ ENFOQUE REACTIVO</div>
-              <div style="font-size:1.15rem;font-weight:700;color:#0d366b;margin-bottom:12px;">Actúa cuando el alumno ya abandonó</div>
-              <div style="display:grid;grid-template-columns:1fr;gap:8px;">
-                <div style="background:#f8fafc;border-left:4px solid #d03b3b;padding:8px 12px;border-radius:6px;font-size:0.92rem;">🎓 <b>Impacto estudiantil:</b> proyecto de vida truncado</div>
-                <div style="background:#f8fafc;border-left:4px solid #d03b3b;padding:8px 12px;border-radius:6px;font-size:0.92rem;">📉 <b>Impacto institucional:</b> inestabilidad financiera</div>
-                <div style="background:#f8fafc;border-left:4px solid #d03b3b;padding:8px 12px;border-radius:6px;font-size:0.92rem;">🏛️ <b>Impacto social:</b> pérdida de capital humano</div>
-              </div>
-            </div>
-            """)
-    with col_proact:
-        with tarjeta("enfoque_proactivo", height="stretch"):
-            st.html("""
-            <div style="padding:4px 2px;">
-              <div style="display:inline-block;background:#dcfce7;color:#15803d;font-weight:700;font-size:0.78rem;padding:4px 10px;border-radius:20px;margin-bottom:10px;">🚀 SOLUCIÓN PROACTIVA (IA / ML)</div>
-              <div style="font-size:1.15rem;font-weight:700;color:#0d366b;margin-bottom:12px;">Alerta temprana antes del retiro</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">1️⃣ Regresión Logística</div>
-                <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">2️⃣ Árbol de Decisión</div>
-                <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">3️⃣ Random Forest</div>
-                <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">4️⃣ Gradient Boosting</div>
-              </div>
-            </div>
-            """)
-
-    st.markdown("#### ⚙️ Flujo de Alerta y Semáforo de Intervención")
-    p1, p2, p3 = st.columns(3)
-    with tarjeta("paso_1", p1, "stretch"):
-        st.markdown("📥 **1. Datos Históricos**  \nHistorial académico, pagos y perfil socioeconómico.")
-    with tarjeta("paso_2", p2, "stretch"):
-        st.markdown("🧠 **2. Clasificación ML**  \nPredice la probabilidad individual o masiva de abandono.")
-    with tarjeta("paso_3", p3, "stretch"):
-        st.markdown("🤝 **3. Acción Oportuna**  \nDeriva a tutoría académica o apoyo financiero.")
-
-    corte = max(CORTE_ROJO, umbral)
-    s1, s2, s3 = st.columns(3)
-    s1.success(f"🟢 **Bajo (< {umbral * 100:.0f} %):** Seguimiento regular")
-    s2.warning(f"🟡 **Moderado ({umbral * 100:.0f} % – {corte * 100:.0f} %):** Tutoría preventiva")
-    s3.error(f"🔴 **Alto (≥ {corte * 100:.0f} %):** Priorizar intervención")
-
-    st.divider()
-    antecedente_sel = st.selectbox(
-        "📚 1.1 Antecedentes Científicos y Pregunta de Investigación (selecciona para desplegar):",
-        [
-            "🔽 Oculto — Selecciona un antecedente o la pregunta de investigación...",
-            "❓ Pregunta de Investigación Comparativa",
-            "🌍 Internacional (Colombia) — Banquez-Maturana et al. (2025)",
-            "🌍 Internacional (México) — Kuz y Morales (2023)",
-            "🇵🇪 Nacional (Perú - UNTELS) — Valero Cajahuanca et al. (2022)",
-            "📍 Local (Trujillo - UCT) — Izquierdo y Torres (2024)",
-            "📋 Ver tabla comparativa de los 4 antecedentes",
-        ],
-    )
-
-    df_antecedentes = pd.DataFrame([
-        {
-            "Ámbito": "Internacional (Colombia)",
-            "Autores": "Banquez-Maturana et al. (2025)",
-            "Muestra y Método": "104,147 registros · DSR + SMOTE",
-            "Mejor Resultado": "LightGBM: Accuracy = 87.00 %, F1 = 0.83",
-            "Hallazgo Clave": "El progreso académico y la tendencia de notas son los mayores determinantes (SHAP)."
-        },
-        {
-            "Ámbito": "Internacional (México)",
-            "Autores": "Kuz y Morales (2023)",
-            "Muestra y Método": "1,847 registros (univ. privada, 2014–2020)",
-            "Mejor Resultado": "XGBoost: Accuracy = 99.28 % (94 % retención)",
-            "Hallazgo Clave": "Predictores en 1er año: promedio inicial, porcentaje de beca y región del campus."
-        },
-        {
-            "Ámbito": "Nacional (Perú - UNTELS)",
-            "Autores": "Valero Cajahuanca et al. (2022)",
-            "Muestra y Método": "652 estudiantes (muestra 106, 2018–2021)",
-            "Mejor Resultado": "KNN (90.62 %) > SVM (87.50 %) > Reg. Log. y Árbol (81.25 %)",
-            "Hallazgo Clave": "Integrar variables académicas y socioeconómicas eleva la precisión."
-        },
-        {
-            "Ámbito": "Local (Trujillo - UCT)",
-            "Autores": "Izquierdo y Torres (2024)",
-            "Muestra y Método": "3,156 estudiantes en 11 carreras (25 % deserción)",
-            "Mejor Resultado": "Regresión Logística Binaria (98.70 % en train)",
-            "Hallazgo Clave": "Factores significativos: procedencia, n° hermanos, colegio y cursos desaprobados."
-        },
-    ])
-
-    if "Pregunta" in antecedente_sel:
-        st.info(
-            "❓ **Pregunta de Investigación:** "
-            "¿Cuál de los algoritmos de Machine Learning presenta el mayor rendimiento predictivo en términos de "
-            "**exactitud, precisión, sensibilidad y F1-score** para la clasificación de la deserción universitaria, "
-            "utilizando el conjunto de datos del repositorio UCI Machine Learning Repository?"
-        )
-    elif "Colombia" in antecedente_sel:
-        st.dataframe(df_antecedentes.iloc[[0]], width="stretch", hide_index=True)
-    elif "México" in antecedente_sel:
-        st.dataframe(df_antecedentes.iloc[[1]], width="stretch", hide_index=True)
-    elif "UNTELS" in antecedente_sel:
-        st.dataframe(df_antecedentes.iloc[[2]], width="stretch", hide_index=True)
-    elif "Trujillo" in antecedente_sel:
-        st.dataframe(df_antecedentes.iloc[[3]], width="stretch", hide_index=True)
-    elif "tabla" in antecedente_sel:
-        st.dataframe(df_antecedentes, width="stretch", hide_index=True)
-
-
-# ---------------------------------------------------------
-# VISTA 2: OBJETIVOS Y ALCANCE (SECCIONES 1.3 Y 1.4 DEL INFORME)
-# ---------------------------------------------------------
-elif menu == VISTA_OBJETIVOS:
-    encabezado(
-        "🎯 Objetivos, Alcance, Restricciones y Criterios de Éxito",
-        "Formulación del Objetivo General (OG), los 5 Objetivos Específicos (OE1–OE5), delimitación del alcance "
-        "experimental, restricciones metodológicas y metas operativas de evaluación."
-    )
-
-    tab_objetivos, tab_alcance = st.tabs([
+    tab_contexto, tab_objetivos, tab_alcance = st.tabs([
+        "🌍 1.1 – 1.2 Contexto y Antecedentes",
         "🎯 1.3 Objetivos (OG y OE1–OE5)",
-        "🛡️ 1.4 Alcance, Restricciones y Criterios de Éxito"
+        "🛡️ 1.4 Alcance, Restricciones y Metas"
     ])
+
+    with tab_contexto:
+        n1, n2, n3 = st.columns(3)
+        n1.metric("🌍 Nivel Internacional (OCDE)", "20 % – 30 %", "Tasa global de abandono superior", delta_color="off", delta_arrow="off", border=True)
+        n2.metric("🇵🇪 Nivel Nacional (Perú)", "~174,000", "Estudiantes desertaron en 2020", delta_color="off", delta_arrow="off", border=True)
+        n3.metric("📍 Nivel Local (Trujillo)", "25.00 %", "Índice regional (2021–2022)", delta_color="off", delta_arrow="off", border=True)
+
+        col_react, col_proact = st.columns(2, gap="large")
+        with col_react:
+            with tarjeta("enfoque_reactivo", height="stretch"):
+                st.html("""
+                <div style="padding:4px 2px;">
+                  <div style="display:inline-block;background:#fee2e2;color:#b91c1c;font-weight:700;font-size:0.78rem;padding:4px 10px;border-radius:20px;margin-bottom:10px;">⚠️ ENFOQUE REACTIVO</div>
+                  <div style="font-size:1.15rem;font-weight:700;color:#0d366b;margin-bottom:12px;">Actúa cuando el alumno ya abandonó</div>
+                  <div style="display:grid;grid-template-columns:1fr;gap:8px;">
+                    <div style="background:#f8fafc;border-left:4px solid #d03b3b;padding:8px 12px;border-radius:6px;font-size:0.92rem;">🎓 <b>Impacto estudiantil:</b> proyecto de vida truncado</div>
+                    <div style="background:#f8fafc;border-left:4px solid #d03b3b;padding:8px 12px;border-radius:6px;font-size:0.92rem;">📉 <b>Impacto institucional:</b> inestabilidad financiera</div>
+                    <div style="background:#f8fafc;border-left:4px solid #d03b3b;padding:8px 12px;border-radius:6px;font-size:0.92rem;">🏛️ <b>Impacto social:</b> pérdida de capital humano</div>
+                  </div>
+                </div>
+                """)
+        with col_proact:
+            with tarjeta("enfoque_proactivo", height="stretch"):
+                st.html("""
+                <div style="padding:4px 2px;">
+                  <div style="display:inline-block;background:#dcfce7;color:#15803d;font-weight:700;font-size:0.78rem;padding:4px 10px;border-radius:20px;margin-bottom:10px;">🚀 SOLUCIÓN PROACTIVA (IA / ML)</div>
+                  <div style="font-size:1.15rem;font-weight:700;color:#0d366b;margin-bottom:12px;">Alerta temprana antes del retiro</div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                    <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">1️⃣ Regresión Logística</div>
+                    <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">2️⃣ Árbol de Decisión</div>
+                    <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">3️⃣ Random Forest</div>
+                    <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px 12px;border-radius:8px;font-weight:600;color:#1e40af;font-size:0.9rem;">4️⃣ Gradient Boosting</div>
+                  </div>
+                </div>
+                """)
+
+        st.markdown("#### ⚙️ Flujo de Alerta y Semáforo de Intervención")
+        p1, p2, p3 = st.columns(3)
+        with tarjeta("paso_1", p1, "stretch"):
+            st.markdown("📥 **1. Datos Históricos**  \nHistorial académico, pagos y perfil socioeconómico.")
+        with tarjeta("paso_2", p2, "stretch"):
+            st.markdown("🧠 **2. Clasificación ML**  \nPredice la probabilidad individual o masiva de abandono.")
+        with tarjeta("paso_3", p3, "stretch"):
+            st.markdown("🤝 **3. Acción Oportuna**  \nDeriva a tutoría académica o apoyo financiero.")
+
+        corte = max(CORTE_ROJO, umbral)
+        s1, s2, s3 = st.columns(3)
+        s1.success(f"🟢 **Bajo (< {umbral * 100:.0f} %):** Seguimiento regular")
+        s2.warning(f"🟡 **Moderado ({umbral * 100:.0f} % – {corte * 100:.0f} %):** Tutoría preventiva")
+        s3.error(f"🔴 **Alto (≥ {corte * 100:.0f} %):** Priorizar intervención")
+
+        st.divider()
+        antecedente_sel = st.selectbox(
+            "📚 1.1 Antecedentes Científicos y Pregunta de Investigación (selecciona para desplegar):",
+            [
+                "🔽 Oculto — Selecciona un antecedente o la pregunta de investigación...",
+                "❓ Pregunta de Investigación Comparativa",
+                "🌍 Internacional (Colombia) — Banquez-Maturana et al. (2025)",
+                "🌍 Internacional (México) — Kuz y Morales (2023)",
+                "🇵🇪 Nacional (Perú - UNTELS) — Valero Cajahuanca et al. (2022)",
+                "📍 Local (Trujillo - UCT) — Izquierdo y Torres (2024)",
+                "📋 Ver tabla comparativa de los 4 antecedentes",
+            ],
+        )
+
+        df_antecedentes = pd.DataFrame([
+            {
+                "Ámbito": "Internacional (Colombia)",
+                "Autores": "Banquez-Maturana et al. (2025)",
+                "Muestra y Método": "104,147 registros · DSR + SMOTE",
+                "Mejor Resultado": "LightGBM: Accuracy = 87.00 %, F1 = 0.83",
+                "Hallazgo Clave": "El progreso académico y la tendencia de notas son los mayores determinantes (SHAP)."
+            },
+            {
+                "Ámbito": "Internacional (México)",
+                "Autores": "Kuz y Morales (2023)",
+                "Muestra y Método": "1,847 registros (univ. privada, 2014–2020)",
+                "Mejor Resultado": "XGBoost: Accuracy = 99.28 % (94 % retención)",
+                "Hallazgo Clave": "Predictores en 1er año: promedio inicial, porcentaje de beca y región del campus."
+            },
+            {
+                "Ámbito": "Nacional (Perú - UNTELS)",
+                "Autores": "Valero Cajahuanca et al. (2022)",
+                "Muestra y Método": "652 estudiantes (muestra 106, 2018–2021)",
+                "Mejor Resultado": "KNN (90.62 %) > SVM (87.50 %) > Reg. Log. y Árbol (81.25 %)",
+                "Hallazgo Clave": "Integrar variables académicas y socioeconómicas eleva la precisión."
+            },
+            {
+                "Ámbito": "Local (Trujillo - UCT)",
+                "Autores": "Izquierdo y Torres (2024)",
+                "Muestra y Método": "3,156 estudiantes en 11 carreras (25 % deserción)",
+                "Mejor Resultado": "Regresión Logística Binaria (98.70 % en train)",
+                "Hallazgo Clave": "Factores significativos: procedencia, n° hermanos, colegio y cursos desaprobados."
+            },
+        ])
+
+        if "Pregunta" in antecedente_sel:
+            st.info(
+                "❓ **Pregunta de Investigación:** "
+                "¿Cuál de los algoritmos de Machine Learning presenta el mayor rendimiento predictivo en términos de "
+                "**exactitud, precisión, sensibilidad y F1-score** para la clasificación de la deserción universitaria, "
+                "utilizando el conjunto de datos del repositorio UCI Machine Learning Repository?"
+            )
+        elif "Colombia" in antecedente_sel:
+            st.dataframe(df_antecedentes.iloc[[0]], width="stretch", hide_index=True)
+        elif "México" in antecedente_sel:
+            st.dataframe(df_antecedentes.iloc[[1]], width="stretch", hide_index=True)
+        elif "UNTELS" in antecedente_sel:
+            st.dataframe(df_antecedentes.iloc[[2]], width="stretch", hide_index=True)
+        elif "Trujillo" in antecedente_sel:
+            st.dataframe(df_antecedentes.iloc[[3]], width="stretch", hide_index=True)
+        elif "tabla" in antecedente_sel:
+            st.dataframe(df_antecedentes, width="stretch", hide_index=True)
 
     with tab_objetivos:
         col_og, col_oe = st.columns([1.05, 1.35], gap="large")
@@ -2137,7 +2127,7 @@ elif menu == VISTA_CONCLUSIONES:
         st.subheader("🎤 Ruta Sugerida para Exponer 100 % desde Streamlit (5 Integrantes)")
         g1, g2, g3, g4, g5 = st.columns(5)
         bloques_guion = [
-            ("1️⃣ Integrante 1", "Inicio y Contexto", "Pestaña **🏠 Inicio y Contexto**: presentar al Grupo 03, el problema (20-30 % global, 174 mil en Perú, 25 % en Trujillo), antecedentes, pregunta, objetivos (OG y OE1–OE5), alcance, restricciones y metas."),
+            ("1️⃣ Integrante 1", "Contexto y Objetivos", "Pestaña **🏠 Contexto y Objetivos**: presentar al Grupo 03, el problema (20-30 % global, 174 mil en Perú, 25 % en Trujillo), antecedentes, pregunta, objetivos (OG y OE1–OE5), alcance, restricciones y metas."),
             ("2️⃣ Integrante 2", "Datos y Metodología", "Pestaña **📊 Datos y Metodología**: explicar las 6 fases CRISP-DM, la muestra censal (4,424; split 80/20 estratificado), el EDA interactivo y los 5 bloques de 36 variables."),
             ("3️⃣ Integrante 3", "Preprocesamiento y Modelos", "Pestaña **📊 Datos y Metodología (tabs 4 y 5)**: mostrar el `ColumnTransformer` sin fuga de datos, la tabla real de los **5 estudiantes (36 → 235 cols)** y los hiperparámetros de los 4 modelos."),
             ("4️⃣ Integrante 4", "Resultados OE1–OE5", "Pestaña **🏆 Modelos y Resultados**: exponer el triunfo de Gradient Boosting en 5-Fold CV (`0.7907`), responder OE1 a OE5, y explicar el paso de umbral `0.50` a `0.40` (rescatando 20 desertores: Recall `83.1 %`)."),
