@@ -776,9 +776,9 @@ if menu == VISTA_INICIO:
     )
 
     tab_contexto, tab_objetivos, tab_alcance = st.tabs([
-        "🌍 1.1 – 1.2 Contexto y Antecedentes",
-        "🎯 1.3 Objetivos (OG y OE1–OE5)",
-        "🛡️ 1.4 Alcance, Restricciones y Metas"
+        "🌍 Contexto y Antecedentes",
+        "🎯 Objetivos (OG y OE1–OE5)",
+        "🛡️ Alcance, Restricciones y Metas"
     ])
 
     with tab_contexto:
@@ -833,7 +833,7 @@ if menu == VISTA_INICIO:
 
         st.divider()
         antecedente_sel = st.selectbox(
-            "📚 1.1 Antecedentes Científicos y Pregunta de Investigación (selecciona para desplegar):",
+            "📚 Antecedentes Científicos y Pregunta de Investigación (selecciona para desplegar):",
             [
                 "🔽 Oculto — Selecciona un antecedente o la pregunta de investigación...",
                 "❓ Pregunta de Investigación Comparativa",
@@ -1000,77 +1000,91 @@ elif menu == VISTA_DATOS:
     )
 
     tab_crispdm, tab_eda, tab_dicc, tab_preproc, tab_arq = st.tabs([
-        "🧭 3.1 – 3.3 Metodología CRISP-DM y Muestra",
-        "📊 3.4.1 Análisis Exploratorio (EDA)",
-        "📋 3.4.2 Diccionario de las 36 Variables",
-        "⚙️ 3.4.4 – 3.4.5 Preprocesamiento y 5 Estudiantes",
-        "🏗️ 3.5 Arquitectura, Flujo e Hiperparámetros"
+        "🧭 Metodología CRISP-DM y Muestra",
+        "📊 Análisis Exploratorio (EDA)",
+        "📋 Diccionario de las 36 Variables",
+        "⚙️ Preprocesamiento y 5 Estudiantes",
+        "🏗️ Arquitectura, Flujo e Hiperparámetros"
     ])
 
     with tab_crispdm:
-        st.subheader("3.2 Proceso de Desarrollo: Metodología CRISP-DM (6 Fases)")
+        st.markdown("#### 🧭 Proceso de Desarrollo: Metodología CRISP-DM (6 Fases)")
         f_cols = st.columns(6)
         fases_crisp = [
-            ("1. Negocio", "Definición del problema de deserción, objetivos OE1–OE5 y metas (Acc>75%, Prec>75%, Rec>80%, F1>0.78)."),
-            ("2. Datos", "Inspección del dataset UCI #697: 4,424 registros, 36 predictoras, 0 nulos, 0 duplicados; desbalance 67.9% vs 32.1%."),
-            ("3. Preparación", "Binarización (Dropout=1 vs Resto=0), split 80/20 estratificado (SEED=42), One-Hot, StandardScaler y pesos de clase."),
-            ("4. Modelado", "Entrenamiento de 4 clasificadores supervisados: Reg. Logística, Árbol CART, Random Forest y Gradient Boosting."),
-            ("5. Evaluación", "Selección del ganador por 5-Fold CV en Train; evaluación ciega en Test, calibración de umbral (0.40) y permutación."),
-            ("6. Despliegue", "Serialización del pipeline (.joblib), repositorio reproducible y prototipo interactivo en Streamlit."),
+            ("FASE 1", "🎯 Negocio", "#eff6ff", "#184f95", "Objetivos OE1–OE5 y metas operativas (`F1 > 0.78`, `Recall > 80 %`)."),
+            ("FASE 2", "📦 Datos", "#f0fdf4", "#15803d", "UCI #697: **4,424 alumnos**, 36 variables, 0 nulos (`32.1 %` Dropout)."),
+            ("FASE 3", "⚙️ Preparación", "#fffbeb", "#b45309", "Split **80/20** (`SEED=42`), One-Hot, StandardScaler y pesos de clase."),
+            ("FASE 4", "🤖 Modelado", "#f5f3ff", "#6d28d9", "Entrenamiento supervisado de **4 algoritmos** de clasificación."),
+            ("FASE 5", "📊 Evaluación", "#fef2f2", "#b91c1c", "5-Fold CV en Train, Test ciego (885), umbral `0.40` y permutación."),
+            ("FASE 6", "🚀 Despliegue", "#ecfeff", "#0e7490", "Pipeline serializado (`.joblib`) y simulador web en Streamlit."),
         ]
-        for col_f, (tit_f, desc_f) in zip(f_cols, fases_crisp):
-            with tarjeta(f"crisp_{tit_f}", col_f, "stretch"):
-                st.markdown(f"**{tit_f}**")
+        for col_f, (tag_f, tit_f, bg_f, col_b, desc_f) in zip(f_cols, fases_crisp):
+            with tarjeta(f"crisp_{tag_f}", col_f, "stretch"):
+                st.markdown(
+                    f"<div style='display:inline-block;padding:2px 8px;border-radius:10px;background:{bg_f};color:{col_b};font-size:0.74rem;font-weight:700;margin-bottom:6px'>{tag_f}</div>"
+                    f"<div style='font-weight:700;font-size:1rem;color:#0d366b;margin-bottom:6px'>{tit_f}</div>",
+                    unsafe_allow_html=True,
+                )
                 st.caption(desc_f)
 
-        st.subheader("3.0 Población, Muestra Censal y Partición Estratificada (80 / 20)")
+        st.markdown("#### 👥 Población, Muestra Censal y Partición Estratificada (80 / 20)")
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Población / Muestra", "4,424 estudiantes", "Muestreo censal · Portalegre (Portugal)", delta_color="off", delta_arrow="off", border=True)
         m2.metric("Entrenamiento (80 %)", "3,539 registros", "1,137 Dropout (32.1 %) · 5-Fold CV", delta_color="off", delta_arrow="off", border=True)
         m3.metric("Prueba Hold-Out (20 %)", "885 registros", "284 Dropout (32.1 %) · Evaluación ciega", delta_color="off", delta_arrow="off", border=True)
         m4.metric("Calidad y Limpieza", "0 nulos · 0 duplicados", "Nombres limpiados con str.strip()", delta_color="off", delta_arrow="off", border=True)
 
-        c_pob, c_bloques = st.columns([1.15, 1], gap="large")
+        c_pob, c_bloques = st.columns([1.05, 1.25], gap="large")
         with c_pob:
             with tarjeta("card_criterios_muestra", height="stretch"):
-                st.markdown("#### 📋 Población, Criterios de Inclusión y Recolección")
-                st.markdown(
-                    "- **Origen:** Estudiantes de pregrado de 17 carreras del *Instituto Politécnico de Portalegre (Portugal)* matriculados entre **2008/2009 y 2018/2019** (Realinho et al., 2021; DOI: `10.24432/C5MC89`, Licencia CC BY 4.0).\n"
-                    "- **Criterios de inclusión:** Totalidad de los 4,424 registros con `Target` definido (`Dropout`, `Enrolled`, `Graduate`) e información completa en las 36 predictoras.\n"
-                    "- **Criterios de exclusión:** No se eliminaron registros ni outliers; `Enrolled` (794) y `Graduate` (2,209) se agrupan en `Resto = 0` (3,003 casos, 67.9 %) frente a `Dropout = 1` (1,421 casos, 32.1 %).\n"
-                    "- **Regla de oro contra fuga de datos (*Data Leakage*):** El conjunto de prueba (`X_test = 885`) se separa **antes** de preprocesar y solo se evalúa al final."
-                )
+                st.markdown("##### 📋 Diseño Muestral y Reglas de Integridad")
+                reglas_muestra = [
+                    ("🎓 Origen Institucional", "#eff6ff", "#184f95", "17 carreras de pregrado del *IP Portalegre (Portugal)* entre 2008 y 2019 (Realinho et al., 2021 · Licencia CC BY 4.0)."),
+                    ("✅ Criterio de Inclusión Censal", "#f0fdf4", "#15803d", "Se incluye el **100 % de los 4,424 registros** al contar con las 36 predictoras completas y estado académico verificado."),
+                    ("⚖️ Binarización de la Clase Objetivo", "#fffbeb", "#d97706", "`Dropout = 1` (**1,421 casos · 32.1 %**) frente a `Enrolled + Graduate = 0` (**3,003 casos · 67.9 %**)."),
+                    ("🔒 Garantía contra Data Leakage", "#fef2f2", "#d03b3b", "El conjunto `X_test` (**885 alumnos**) se aísla antes de cualquier transformación y jamás participa en el ajuste."),
+                ]
+                for tit_rm, bg_rm, br_rm, txt_rm in reglas_muestra:
+                    st.markdown(
+                        f"<div style='padding:9px 12px;margin-bottom:8px;border-radius:8px;background:{bg_rm};border-left:4px solid {br_rm}'>"
+                        f"<div style='font-weight:700;color:{br_rm};font-size:0.9rem'>{tit_rm}</div>"
+                        f"<div style='color:#1e293b;font-size:0.86rem;margin-top:2px'>{txt_rm}</div></div>",
+                        unsafe_allow_html=True,
+                    )
+
         with c_bloques:
             with tarjeta("card_bloques_vars", height="stretch"):
-                st.markdown("#### 🧩 Bloques de Variables Predictoras (36 en total)")
-                df_bloques = pd.DataFrame([
-                    {"Bloque Temático": "1. Variables Demográficas", "Cantidad": 5, "Ejemplos": "Edad al matricularse, género, estado civil, nacionalidad, desplazado"},
-                    {"Bloque Temático": "2. Variables Socioeconómicas", "Cantidad": 9, "Ejemplos": "Matrícula al día, deudor, becario, estudios y ocupación de los padres"},
-                    {"Bloque Temático": "3. Variables Macroeconómicas", "Cantidad": 3, "Ejemplos": "Tasa de desempleo, tasa de inflación anual, crecimiento del PBI (GDP)"},
-                    {"Bloque Temático": "4. Ingreso y Trayectoria Previa", "Cantidad": 7, "Ejemplos": "Carrera (Course), modalidad y orden de postulación, nota de admisión"},
-                    {"Bloque Temático": "5. Rendimiento 1er y 2do Semestre", "Cantidad": 12, "Ejemplos": "Unidades matriculadas, aprobadas, convalidadas, evaluadas y promedio"},
-                    {"Bloque Temático": "TOTAL PREDICTORAS", "Cantidad": 36, "Ejemplos": "+ 1 variable objetivo (Target binaria: Dropout = 1 vs Resto = 0)"},
+                st.markdown("##### 🧩 Distribución de las 36 Variables Predictoras por Bloque Temático")
+                df_b_chart = pd.DataFrame([
+                    {"Bloque": "Rendimiento 1er y 2do Sem.", "Variables": 12, "Texto": "12 vars (33.3 %)", "Ejemplos": "Matriculadas, aprobadas, convalidadas, evaluadas y notas"},
+                    {"Bloque": "Socioeconómicas", "Variables": 9, "Texto": "9 vars (25.0 %)", "Ejemplos": "Matrícula al día, deudor, becario, estudios/ocupación padres"},
+                    {"Bloque": "Ingreso y Trayectoria", "Variables": 7, "Texto": "7 vars (19.4 %)", "Ejemplos": "Carrera (Course), modalidad, orden de postulación, admisión"},
+                    {"Bloque": "Demográficas", "Variables": 5, "Texto": "5 vars (13.9 %)", "Ejemplos": "Edad al matricularse, género, estado civil, nacionalidad"},
+                    {"Bloque": "Macroeconómicas", "Variables": 3, "Texto": "3 vars (8.3 %)", "Ejemplos": "Tasa de desempleo, inflación anual y crecimiento del PBI"},
                 ])
-                st.dataframe(df_bloques, width="stretch", hide_index=True)
-
-        pipe_path = FIGURES / "figura1_pipeline.png"
-        if pipe_path.exists():
-            with tarjeta("card_pipe_metodologia"):
-                st.markdown("#### 📐 Figura 1: Diseño del Experimento y Pipeline Metodológico (CRISP-DM: Fases 2 a 5)")
-                st.image(
-                    str(pipe_path),
-                    caption="Figura 1: Flujo experimental garantizando partición estratificada 80/20 (SEED=42) y ajuste exclusivo sobre X_train.",
-                    width="stretch"
+                ord_b = df_b_chart["Bloque"].tolist()
+                bar_b = alt.Chart(df_b_chart).mark_bar(cornerRadiusEnd=5, height=22).encode(
+                    y=alt.Y("Bloque:N", sort=None, title=None, axis=alt.Axis(labelFontSize=12, labelLimit=200, ticks=False)),
+                    x=alt.X("Variables:Q", title="Cantidad de Variables Predictoras (Total = 36)", scale=alt.Scale(domain=[0, 15])),
+                    color=alt.Color(
+                        "Bloque:N",
+                        legend=None,
+                        scale=alt.Scale(domain=ord_b, range=["#184f95", "#2a78d6", "#3b82f6", "#64748b", "#94a3b8"]),
+                    ),
+                    tooltip=[alt.Tooltip("Bloque:N"), alt.Tooltip("Variables:Q"), alt.Tooltip("Ejemplos:N")],
                 )
+                txt_b = bar_b.mark_text(dx=6, align="left", fontSize=11.5, fontWeight="bold", color=COLOR_MARINO).encode(text="Texto:N")
+                st.altair_chart((bar_b + txt_b).properties(height=185, background=COLOR_SUPERFICIE), width="stretch")
+                st.dataframe(df_b_chart[["Bloque", "Variables", "Ejemplos"]], width="stretch", hide_index=True)
 
     with tab_eda:
         grupos = abandono_por_grupo(raw_df)
 
         k1, k2, k3, k4 = st.columns(4)
-        k1.metric("Estudiantes", f"{len(raw_df):,}", border=True)
-        k2.metric("Tasa de abandono", f"{tasa_abandono * 100:.1f} %", border=True)
-        k3.metric("Valores faltantes", int(raw_df.isna().sum().sum()), border=True)
-        k4.metric("Variables predictoras", len(ALL_FEATURE_COLS), border=True)
+        k1.metric("Estudiantes", f"{len(raw_df):,}", "Muestra censal completa", delta_color="off", delta_arrow="off", border=True)
+        k2.metric("Tasa de abandono", f"{tasa_abandono * 100:.1f} %", "1,421 casos de Dropout", delta_color="off", delta_arrow="off", border=True)
+        k3.metric("Valores faltantes", int(raw_df.isna().sum().sum()), "0 % datos perdidos", delta_color="off", delta_arrow="off", border=True)
+        k4.metric("Variables predictoras", len(ALL_FEATURE_COLS), "9 nom · 8 bin · 19 num", delta_color="off", delta_arrow="off", border=True)
 
         st.subheader("Distribución de Clases (Target Original vs Binario)")
         c_target1, c_target2 = st.columns(2)
@@ -1132,18 +1146,27 @@ elif menu == VISTA_DATOS:
                 )
                 st.altair_chart(chart_bin, width="stretch")
 
-        st.subheader("Abandono por grupo de estudiantes")
-        with tarjeta("grafico_grupos"):
-            st.altair_chart(grafico_barras(grupos, [0, 1], ".0%", tasa_abandono), width="stretch")
-        st.caption(f"Línea vertical: promedio general ({tasa_abandono * 100:.1f} %). Muestra asociación, no causa.")
+        st.subheader("Tasa de Abandono por Grupo de Riesgo (Gráfico y Tabla)")
+        col_g_bar, col_g_tab = st.columns([1.45, 1], gap="large")
+        with col_g_bar:
+            with tarjeta("grafico_grupos", height="stretch"):
+                st.markdown("##### 📊 Comparativa de Tasa de Abandono por Condición")
+                st.altair_chart(grafico_barras(grupos, [0, 1], ".0%", tasa_abandono), width="stretch")
+                st.caption(f"Línea vertical: promedio general ({tasa_abandono * 100:.1f} %). Muestra asociación estadística, no causalidad.")
+        with col_g_tab:
+            with tarjeta("tabla_grupos_visible", height="stretch"):
+                st.markdown("##### 📋 Resumen Cuantitativo por Grupo")
+                tabla = grupos.assign(Abandono=(grupos["valor"] * 100).round(1))[["Grupo", "Abandono", "Estudiantes"]]
+                st.dataframe(
+                    tabla,
+                    width="stretch",
+                    hide_index=True,
+                    column_config={"Abandono": st.column_config.NumberColumn("Abandono (%)", format="%.1f %%")},
+                )
 
-        with st.expander("🔍 Ver tabla y explorador interactivo del dataset"):
-            st.markdown("##### Resumen por grupo de riesgo")
-            tabla = grupos.assign(Abandono=(grupos["valor"] * 100).round(1))[["Grupo", "Abandono", "Estudiantes"]]
-            st.dataframe(tabla, width="stretch", hide_index=True, column_config={"Abandono": st.column_config.NumberColumn("Abandono (%)")})
-
-            st.divider()
-            st.markdown("##### Filtrar por estado original:")
+        st.subheader("🔍 Explorador Interactivo del Dataset")
+        with tarjeta("explorador_dataset_visible"):
+            st.markdown("##### Filtrar registros por estado académico original:")
             target_filter = st.multiselect(
                 "Selecciona categorías a incluir:",
                 options=list(raw_df[TARGET_COL].unique()),
@@ -1160,7 +1183,7 @@ elif menu == VISTA_DATOS:
 
                 col_met, col_graf = st.columns([1, 2])
                 with col_met:
-                    st.metric("Total seleccionados", f"{len(filtered_df):,} estudiantes", f"{len(filtered_df)/len(raw_df)*100:.1f} % del total")
+                    st.metric("Total seleccionados", f"{len(filtered_df):,} estudiantes", f"{len(filtered_df)/len(raw_df)*100:.1f} % del total", delta_color="off", delta_arrow="off", border=True)
                     st.dataframe(
                         conteo[["Estado", "Estudiantes", "Porcentaje"]],
                         hide_index=True,
@@ -1180,19 +1203,28 @@ elif menu == VISTA_DATOS:
                     text_dyn = bars_dyn.mark_text(dy=-12, fontSize=13, fontWeight="bold", color=COLOR_TINTA).encode(
                         text="Texto:N"
                     )
-                    chart_dyn = (bars_dyn + text_dyn).properties(height=320, background=COLOR_SUPERFICIE)
+                    chart_dyn = (bars_dyn + text_dyn).properties(height=280, background=COLOR_SUPERFICIE)
                     st.altair_chart(chart_dyn, width="stretch")
 
-                st.caption(f"Mostrando los primeros {min(100, len(filtered_df))} registros del subconjunto filtrado:")
+                st.caption(f"Vista previa de los primeros {min(100, len(filtered_df))} registros del dataset UCI #697:")
                 st.dataframe(filtered_df.head(100), width="stretch")
             else:
                 st.warning("⚠️ Selecciona al menos un estado en el filtro para visualizar el gráfico y los datos.")
 
     with tab_dicc:
-        st.markdown("#### 📋 Diccionario Técnico de las 36 Variables Predictoras")
-        st.markdown("Clasificación técnica y tratamiento aplicado durante el preprocesamiento con `ColumnTransformer` en Scikit-Learn.")
+        st.markdown("#### 📋 Diccionario Técnico y Tratamiento de las 36 Variables Predictoras")
+        td1, td2, td3 = st.columns(3)
+        with tarjeta("dicc_res_1", td1, "stretch"):
+            st.metric("🏷️ Variables Nominales", "9 variables", "→ OneHotEncoder (208 cols)", delta_color="off", delta_arrow="off")
+            st.caption("Carrera (`Course`), modalidad de ingreso, estado civil, nacionalidad, estudios y ocupación de los padres.")
+        with tarjeta("dicc_res_2", td2, "stretch"):
+            st.metric("🔘 Variables Binarias", "8 variables", "→ Passthrough (8 cols 0/1)", delta_color="off", delta_arrow="off")
+            st.caption("Matrícula al día (`Tuition fees`), deudor (`Debtor`), becario (`Scholarship`), género, turno, desplazado, etc.")
+        with tarjeta("dicc_res_3", td3, "stretch"):
+            st.metric("🔢 Variables Numéricas", "19 variables", "→ StandardScaler (19 cols Z-score)", delta_color="off", delta_arrow="off")
+            st.caption("Materias de 1er y 2do semestre (matriculadas, aprobadas, notas), nota de admisión, edad, PBI, inflación y desempleo.")
 
-        tipo_filtro = st.radio("Filtrar por tipo de variable:", ["Todas (36)", "Nominales (9)", "Binarias (8)", "Numéricas (19)"], horizontal=True)
+        tipo_filtro = st.radio("Filtrar tabla por tipo de variable:", ["Todas (36)", "Nominales (9)", "Binarias (8)", "Numéricas (19)"], horizontal=True)
 
         dicc_data = [
             ('Marital Status', 'Nominal', 'Estado civil (1=Soltero, 2=Casado, etc.)', 'OneHotEncoder'),
@@ -1244,20 +1276,20 @@ elif menu == VISTA_DATOS:
         st.dataframe(df_d, width="stretch", hide_index=True)
 
     with tab_preproc:
-        st.subheader("3.4.4 Reglas de Preprocesamiento Modular (Sin Fuga de Datos)")
+        st.subheader("Reglas de Preprocesamiento Modular (Sin Fuga de Datos)")
         pr1, pr2, pr3 = st.columns(3)
         with tarjeta("prep_1", pr1, "stretch"):
-            st.markdown("**1️⃣ Objetivo Binario y Partición 80/20**")
-            st.markdown("`Dropout = 1` (1,421) vs `Enrolled + Graduate = 0` (3,003). Partición `stratify=y, random_state=42`: **3,539 train** y **885 test**.")
+            st.metric("1️⃣ Partición Estratificada", "80 % Train / 20 % Test", "3,539 entrenamiento · 885 prueba (SEED=42)", delta_color="off", delta_arrow="off")
+            st.markdown("Mantiene la proporción exacta de `32.1 % Dropout` y `67.9 % Resto` en ambos subconjuntos.")
         with tarjeta("prep_2", pr2, "stretch"):
-            st.markdown("**2️⃣ ColumnTransformer (36 → 235 cols)**")
-            st.markdown("**9 Nominales** → `OneHotEncoder(handle_unknown='ignore')` · **8 Binarias** → `Passthrough (0/1)` · **19 Numéricas** → `StandardScaler` ($z = (x - \\mu)/\\sigma$ de train).")
+            st.metric("2️⃣ ColumnTransformer", "36 → 235 Columnas", "One-Hot (208) + Pass (8) + Z-Score (19)", delta_color="off", delta_arrow="off")
+            st.markdown("Ajustado (`fit`) **únicamente sobre `X_train`** con `handle_unknown='ignore'` para evitar fuga de información.")
         with tarjeta("prep_3", pr3, "stretch"):
-            st.markdown("**3️⃣ Tratamiento del Desbalance**")
-            st.markdown("`class_weight='balanced'` en entrenamiento (peso **1.56** para Dropout y **0.74** para Resto) en Reg. Logística, Árbol y Random Forest. En Gradient Boosting se calibra el umbral a **0.40**.")
+            st.metric("3️⃣ Balanceo de Clases", "Pesos 1.56 vs 0.74", "class_weight='balanced' + Umbral 0.40", delta_color="off", delta_arrow="off")
+            st.markdown("Penaliza errores en la clase minoritaria (`Dropout`) y calibra el punto de corte en Gradient Boosting.")
 
-        st.subheader("3.4.5 Evidencia Real: Los mismos 5 estudiantes (Original vs. Procesado)")
-        st.caption("Comparación directa de 5 registros del conjunto de entrenamiento antes y después de aplicar `ColumnTransformer` ajustado exclusivamente con `X_train`.")
+        st.subheader("Evidencia Real: Los mismos 5 estudiantes (Original vs. Procesado)")
+        st.caption("Comparación directa de 5 registros del conjunto de entrenamiento antes y después de aplicar `ColumnTransformer`.")
 
         df_orig_5 = pd.DataFrame([
             {"ID Estudiante": "Estudiante #571", "Course (Nominal)": 9147, "Tuition fees up to date (Bin)": 1, "Scholarship holder (Bin)": 0, "Age at enrollment (Num)": 22, "Admission grade (Num)": 124.8, "Target_Binario": 1},
@@ -1275,98 +1307,131 @@ elif menu == VISTA_DATOS:
             {"ID Estudiante": "Estudiante #2951", "Course_9147 (1-Hot)": 0.0, "Course_9853 (1-Hot)": 0.0, "Course_9991 (1-Hot)": 0.0, "Tuition (Pass)": 1.0, "Beca (Pass)": 0.0, "Edad (Z-Score train)": -0.700, "Nota Adm (Z-Score train)": 0.118},
         ])
 
-        st.markdown("##### 🔹 Figura 3: Dataset Original (36 variables predictoras)")
-        st.dataframe(df_orig_5, width="stretch", hide_index=True)
-
-        st.markdown("##### 🔸 Figura 4: Dataset Procesado (Espacio expandido a 235 columnas · 0 nulos)")
-        st.dataframe(df_proc_5, width="stretch", hide_index=True)
+        c_t5_orig, c_t5_proc = st.columns(2, gap="large")
+        with c_t5_orig:
+            with tarjeta("card_5_orig", height="stretch"):
+                st.markdown("##### 🔹 Antes: Dataset Original (36 variables)")
+                st.dataframe(df_orig_5, width="stretch", hide_index=True)
+        with c_t5_proc:
+            with tarjeta("card_5_proc", height="stretch"):
+                st.markdown("##### 🔸 Después: Matriz Expandida (235 columnas · 0 nulos)")
+                st.dataframe(df_proc_5, width="stretch", hide_index=True)
 
         evid_path = FIGURES / "evidencia_02_preprocesamiento.png"
         if evid_path.exists():
-            with st.expander("📷 Ver gráfico de expansión dimensional (36 → 235 columnas)"):
+            with tarjeta("card_evid_exp_visible"):
+                st.markdown("##### 📊 Gráfico de Expansión Dimensional (36 → 235 Columnas)")
                 st.image(str(evid_path), caption="Clasificación de las 36 variables y expansión a 235 columnas tras One-Hot Encoding.", width="stretch")
 
     with tab_arq:
-        st.subheader("3.5.4 Modelos Evaluados, Hiperparámetros y Fundamento Teórico")
-        df_hiper = pd.DataFrame([
-            {
-                "Modelo": "🏆 Gradient Boosting (GANADOR)",
-                "Clase Scikit-Learn": "GradientBoostingClassifier",
-                "Hiperparámetros Configurados": "n_estimators=200, learning_rate=0.05, max_depth=4, subsample=0.8, random_state=42",
-                "Fundamento Matemático y Justificación": "Ensamble secuencial: F_m(x) = F_{m-1}(x) + η·h_m(x). Entrena árboles superficiales sobre los pseudo-residuos del gradiente para capturar interacciones no lineales complejas sin sobreajustar."
-            },
-            {
-                "Modelo": "🥈 Random Forest",
-                "Clase Scikit-Learn": "RandomForestClassifier",
-                "Hiperparámetros Configurados": "n_estimators=200, max_depth=None, min_samples_leaf=2, class_weight='balanced', n_jobs=-1, random_state=42",
-                "Fundamento Matemático y Justificación": "Ensamble paralelo (Bagging) por votación mayoritaria: ŷ = moda{T_1(x), ..., T_B(x)}. Reduce la varianza de árboles individuales mediante muestras bootstrap."
-            },
-            {
-                "Modelo": "🥉 Regresión Logística",
-                "Clase Scikit-Learn": "LogisticRegression",
-                "Hiperparámetros Configurados": "C=1.0, penalty='l2', solver='lbfgs', max_iter=1000, class_weight='balanced', random_state=42",
-                "Fundamento Matemático y Justificación": "Clasificador lineal basal con función sigmoide P(y=1|x) = 1 / (1 + e^{-z}) y regularización Ridge (L2). Alta interpretabilidad, pero asume frontera lineal en el log-odds."
-            },
-            {
-                "Modelo": "4° Árbol de Decisión (CART)",
-                "Clase Scikit-Learn": "DecisionTreeClassifier",
-                "Hiperparámetros Configurados": "criterion='gini', max_depth=8, min_samples_leaf=10, class_weight='balanced', random_state=42",
-                "Fundamento Matemático y Justificación": "Partición recursiva minimizando impureza de Gini (1 - Σ p_k²). Se acota a profundidad 8 y mínimo 10 muestras por hoja para evitar memorización."
-            },
-        ])
-        st.dataframe(df_hiper, width="stretch", hide_index=True)
-
-        c_flujo, c_lib = st.columns([1.2, 1], gap="large")
-        with c_flujo:
-            with tarjeta("card_flujo_pasos", height="stretch"):
-                st.markdown("#### 🔄 3.5.2 Flujo de Proceso en 8 Pasos")
+        st.subheader("Modelos Supervisados Candidatos y Configuración de Hiperparámetros")
+        m_c1, m_c2, m_c3, m_c4 = st.columns(4)
+        modelos_cards = [
+            (
+                "📐 LINEAL (BASELINE)",
+                "Regresión Logística",
+                "LogisticRegression",
+                "#eff6ff",
+                "#184f95",
+                "C=1.0 · penalty='l2' · solver='lbfgs' · class_weight='balanced'",
+                "Clasificador lineal sigmoide con regularización Ridge (L2). Punto de referencia interpretable de frontera lineal.",
+            ),
+            (
+                "🌳 ÁRBOL INDIVIDUAL",
+                "Árbol de Decisión",
+                "DecisionTreeClassifier",
+                "#f0fdf4",
+                "#15803d",
+                "criterion='gini' · max_depth=8 · min_samples_leaf=10 · balanced",
+                "Partición recursiva no lineal por impureza de Gini, acotada a profundidad 8 para controlar el sobreajuste.",
+            ),
+            (
+                "🌲 ENSAMBLE BAGGING",
+                "Random Forest",
+                "RandomForestClassifier",
+                "#fffbeb",
+                "#b45309",
+                "n_estimators=200 · min_samples_leaf=2 · class_weight='balanced'",
+                "Ensamble paralelo de 200 árboles por votación mayoritaria sobre muestras bootstrap independientes.",
+            ),
+            (
+                "🚀 ENSAMBLE BOOSTING",
+                "Gradient Boosting",
+                "GradientBoostingClassifier",
+                "#f5f3ff",
+                "#6d28d9",
+                "n_estimators=200 · lr=0.05 · max_depth=4 · subsample=0.8",
+                "Ensamble secuencial aditivo donde cada árbol corrige los pseudo-residuos del anterior con baja varianza.",
+            ),
+        ]
+        for col_mc, (rank_m, nom_m, cls_m, bg_m, br_m, hip_m, desc_m) in zip([m_c1, m_c2, m_c3, m_c4], modelos_cards):
+            with tarjeta(f"mod_arq_{nom_m[:6]}", col_mc, "stretch"):
                 st.markdown(
-                    "1. **Ingesta y limpieza inicial:** Carga reproducible con `ucimlrepo` (ID 697) y sanitización `str.strip()`.\n"
-                    "2. **Binarización del objetivo:** `Dropout = 1` (32.1 %) vs. `Enrolled + Graduate = 0` (67.9 %).\n"
-                    "3. **Partición estratificada 80/20:** `X_train = 3,539` y `X_test = 885` (`SEED = 42`).\n"
-                    "4. **Preprocesador modular:** `ColumnTransformer` (One-Hot + Passthrough + StandardScaler).\n"
-                    "5. **Validación Cruzada 5-Fold:** Evaluación de los 4 pipelines exclusivamente dentro de `X_train`.\n"
-                    "6. **Regla de selección del ganador:** Mayor F1 medio en CV; ante empate técnico (< 0.005), menor desviación estándar y mayor precisión → **Gradient Boosting**.\n"
-                    "7. **Evaluación ciega en Test:** Predicción única sobre los 885 registros reservados (`F1 = 0.8075`, `ROC-AUC = 0.9343`).\n"
-                    "8. **Explicabilidad y despliegue:** Importancia por permutación (30 repeticiones), calibración de umbral (`0.40`) y serialización `.joblib`."
+                    f"<div style='display:inline-block;padding:2px 9px;border-radius:10px;background:{bg_m};color:{br_m};font-size:0.75rem;font-weight:700;margin-bottom:6px'>{rank_m}</div>"
+                    f"<div style='font-weight:700;font-size:1.05rem;color:#0d366b'>{nom_m}</div>"
+                    f"<div style='font-family:monospace;font-size:0.78rem;color:#64748b;margin-bottom:8px'>{cls_m}</div>"
+                    f"<div style='padding:6px 8px;border-radius:6px;background:#f1f5f9;font-family:monospace;font-size:0.76rem;color:#0f172a;margin-bottom:8px'>{hip_m}</div>",
+                    unsafe_allow_html=True,
                 )
+                st.caption(desc_m)
+
+        st.markdown("#### 🔄 Flujo Experimental en 8 Etapas")
+        pasos_8 = [
+            ("1️⃣ Ingesta UCI #697", "Carga reproducible con `ucimlrepo` y limpieza de encabezados `str.strip()`."),
+            ("2️⃣ Binarización Target", "Definición de `Dropout = 1` (32.1 %) frente a `Resto = 0` (67.9 %)."),
+            ("3️⃣ Split Estratificado", "Partición fija en `X_train = 3,539` (80 %) y `X_test = 885` (20 %, `SEED=42`)."),
+            ("4️⃣ ColumnTransformer", "One-Hot (9) + Passthrough (8) + StandardScaler (19) → 235 columnas."),
+            ("5️⃣ Validación 5-Fold CV", "Competencia experimental de los 4 pipelines exclusivamente dentro de `X_train`."),
+            ("6️⃣ Regla de Selección", "Mayor `F1-Score` medio en CV y desempate técnico (`< 0.005`) por menor desviación estándar."),
+            ("7️⃣ Prueba Ciega (Hold-Out)", "Evaluación definitiva del modelo seleccionado sobre los 885 alumnos de `X_test`."),
+            ("8️⃣ Calibración y Despliegue", "Ajuste de umbral operativo en curva PR, importancia por permutación y exportación `.joblib`."),
+        ]
+        p_row1 = st.columns(4)
+        for col_p, (tit_p, txt_p) in zip(p_row1, pasos_8[:4]):
+            with tarjeta(f"flujo_p_{tit_p[:5]}", col_p, "stretch"):
+                st.markdown(f"**{tit_p}**")
+                st.caption(txt_p)
+        p_row2 = st.columns(4)
+        for col_p, (tit_p, txt_p) in zip(p_row2, pasos_8[4:]):
+            with tarjeta(f"flujo_p_{tit_p[:5]}", col_p, "stretch"):
+                st.markdown(f"**{tit_p}**")
+                st.caption(txt_p)
+
+        c_lib, c_code = st.columns([1, 1.15], gap="large")
         with c_lib:
             with tarjeta("card_stack_tecnologico", height="stretch"):
-                st.markdown("#### 🛠️ 3.1 y 3.5.3 Stack Tecnológico y Librerías")
+                st.markdown("#### 🛠️ Stack Tecnológico y Librerías")
                 df_libs = pd.DataFrame([
-                    {"Herramienta": "Python 3.x", "Rol en el Proyecto": "Lenguaje principal de experimentación y producción modular (`src/`)."},
-                    {"Herramienta": "pandas & numpy", "Rol en el Proyecto": "Manipulación tabular, limpieza y operaciones matriciales."},
-                    {"Herramienta": "scikit-learn", "Rol en el Proyecto": "ColumnTransformer, Pipeline, 4 clasificadores, StratifiedKFold, métricas y permutación."},
-                    {"Herramienta": "Altair / Matplotlib / Seaborn", "Rol en el Proyecto": "Visualización estadística interactiva y gráficos del informe."},
-                    {"Herramienta": "ucimlrepo & joblib", "Rol en el Proyecto": "Descarga oficial del dataset UCI #697 y persistencia del pipeline ganador."},
-                    {"Herramienta": "Streamlit & Git/GitHub", "Rol en el Proyecto": "Prototipo web interactivo (`app.py`) y control de versiones grupal."},
+                    {"Herramienta": "Python 3.x", "Rol en el Proyecto": "Lenguaje principal de experimentación y arquitectura modular (`src/`)."},
+                    {"Herramienta": "pandas & numpy", "Rol en el Proyecto": "Manipulación tabular, limpieza y cálculo matricial."},
+                    {"Herramienta": "scikit-learn", "Rol en el Proyecto": "ColumnTransformer, Pipeline, 4 clasificadores, StratifiedKFold y métricas."},
+                    {"Herramienta": "Altair / Matplotlib", "Rol en el Proyecto": "Visualización estadística interactiva y gráficos de evaluación."},
+                    {"Herramienta": "ucimlrepo & joblib", "Rol en el Proyecto": "Conexión al repositorio UCI #697 y serialización del modelo seleccionado."},
+                    {"Herramienta": "Streamlit & Git/GitHub", "Rol en el Proyecto": "Aplicación web interactiva (`app.py`) y control de versiones grupal."},
                 ])
                 st.dataframe(df_libs, width="stretch", hide_index=True)
 
-        with st.expander("💻 Ver código fuente de construcción del Pipeline Ganador (Sección 3.5.4)"):
-            st.code("""from sklearn.pipeline import Pipeline
-from sklearn.ensemble import GradientBoostingClassifier
+        with c_code:
+            with tarjeta("card_code_pipeline", height="stretch"):
+                st.markdown("#### 💻 Encapsulamiento Modular de Pipelines (`src/models.py`)")
+                st.code("""from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from src.preprocessor import get_preprocessor
 from src.config import SEED
-import joblib
 
-pipeline_ganador = Pipeline([
-    ("preprocessor", get_preprocessor()),  # ColumnTransformer (One-Hot 9, Passthrough 8, StandardScaler 19)
-    ("classifier", GradientBoostingClassifier(
-        n_estimators=200,
-        learning_rate=0.05,
-        max_depth=4,
-        subsample=0.8,
-        random_state=SEED
-    ))
-])
-
-pipeline_ganador.fit(X_train, y_train)
-joblib.dump(pipeline_ganador, "models/pipeline_ganador.joblib")""", language="python")
+def build_candidate_pipeline(classifier):
+    # Une el preprocesador (36 -> 235 cols) con cada clasificador candidato
+    # Garantiza ajuste exclusivo en el pliegue de entrenamiento (0 Data Leakage)
+    return Pipeline([
+        ("preprocessor", get_preprocessor()),
+        ("classifier", classifier)
+    ])""", language="python")
 
 
 # ---------------------------------------------------------
-# VISTA 3: MODELOS Y RESULTADOS (CAPÍTULO IV: OE1 A OE5)
+# VISTA 3: MODELOS Y RESULTADOS (OE1 A OE5)
 # ---------------------------------------------------------
 elif menu == VISTA_MODELOS:
     encabezado(
@@ -1375,9 +1440,9 @@ elif menu == VISTA_MODELOS:
         f"(<b>{model_name}</b>) en el conjunto de prueba independiente (885 estudiantes)."
     )
     tab_cv, tab_oe, tab_test = st.tabs([
-        "🏆 4.3.1 Comparación de Modelos (Validación Cruzada)",
-        "🎯 4.2 Resultados por Objetivo (OE1 a OE5)",
-        "🔬 4.3.2 – 4.3.5 Evaluación en Test, Umbral y Explicabilidad"
+        "🏆 Comparación de Modelos (Validación Cruzada)",
+        "🎯 Resultados por Objetivo (OE1 a OE5)",
+        "🔬 Evaluación en Test, Umbral y Explicabilidad"
     ])
 
     with tab_cv:
@@ -1497,11 +1562,11 @@ elif menu == VISTA_MODELOS:
 
         with col_cv_tablas:
             with tarjeta("card_tabla3_cv"):
-                st.markdown("##### 📋 Tabla 3: Comparación Consolidada en Validación Cruzada (5 Pliegues sobre `X_train` = 3,539)")
+                st.markdown("##### 📋 Comparación Consolidada en Validación Cruzada (5 Pliegues sobre `X_train` = 3,539)")
                 st.dataframe(df_cv_results, width="stretch", hide_index=True)
 
             with tarjeta("card_tabla4_cv"):
-                st.markdown("##### 📋 Tabla 4: Cumplimiento de los 4 Criterios en Validación Cruzada (Umbral 0.50)")
+                st.markdown("##### 📋 Cumplimiento de los 4 Criterios en Validación Cruzada (Umbral 0.50)")
                 df_tabla4 = pd.DataFrame([
                     {"Modelo": "Gradient Boosting", "Accuracy > 75 %": "✔ Sí (87.43 %)", "Precision > 75 %": "✔ Sí (84.96 %)", "Recall > 80 %": "✘ No (73.97 %)", "F1 > 0.78": "✔ Sí (0.7907)", "¿Cumple los 4 (0.50)?": "No (se calibra a 0.40)"},
                     {"Modelo": "Random Forest", "Accuracy > 75 %": "✔ Sí (86.30 %)", "Precision > 75 %": "✔ Sí (78.61 %)", "Recall > 80 %": "✘ No (78.89 %)", "F1 > 0.78": "✔ Sí (0.7873)", "¿Cumple los 4 (0.50)?": "No"},
@@ -1515,7 +1580,7 @@ elif menu == VISTA_MODELOS:
                 )
 
     with tab_oe:
-        st.subheader("4.2 Demostración Gráfica de Resultados por Objetivo (OE1 – OE5)")
+        st.subheader("Demostración Gráfica de Resultados por Objetivo (OE1 – OE5)")
 
         c_oe1, c_oe2 = st.columns(2, gap="large")
         with c_oe1:
@@ -1673,14 +1738,14 @@ elif menu == VISTA_MODELOS:
         mostrar_metricas(m_test)
 
         with tarjeta("card_tabla5_test"):
-            st.markdown("##### 📋 Tabla 5: Comparativa Oficial en Test — Umbral por Defecto (`0.50`) vs. Umbral Operativo (`0.40`)")
+            st.markdown("##### 📋 Comparativa Oficial en Test — Umbral por Defecto (`0.50`) vs. Umbral Operativo (`0.40`)")
             df_tabla5 = pd.DataFrame([
                 {
                     "Métrica (Clase Dropout)": "Exactitud (Accuracy)",
                     "Umbral 0.50 (Estándar)": f"{m_test_050['accuracy']*100:.2f} % (782/885)",
                     "Umbral 0.40 (Operativo)": f"{m_test_040['accuracy']*100:.2f} % (786/885)",
                     f"Umbral Activo ({umbral:.2f})": f"{m_test['accuracy']*100:.2f} %",
-                    "Meta (Sección 1.4)": "> 75.00 %",
+                    "Meta Operativa": "> 75.00 %",
                     "Estado": "✔ Superada en ambos (+13.36 pp en 0.50)"
                 },
                 {
@@ -1688,7 +1753,7 @@ elif menu == VISTA_MODELOS:
                     "Umbral 0.50 (Estándar)": f"{m_test_050['precision']*100:.2f} % (216/251)",
                     "Umbral 0.40 (Operativo)": f"{m_test_040['precision']*100:.2f} % (236/287)",
                     f"Umbral Activo ({umbral:.2f})": f"{m_test['precision']*100:.2f} %",
-                    "Meta (Sección 1.4)": "> 75.00 %",
+                    "Meta Operativa": "> 75.00 %",
                     "Estado": "✔ Superada en ambos (+11.06 pp en 0.50)"
                 },
                 {
@@ -1696,7 +1761,7 @@ elif menu == VISTA_MODELOS:
                     "Umbral 0.50 (Estándar)": f"{m_test_050['recall']*100:.2f} % (216/284)",
                     "Umbral 0.40 (Operativo)": f"{m_test_040['recall']*100:.2f} % (236/284)",
                     f"Umbral Activo ({umbral:.2f})": f"{m_test['recall']*100:.2f} %",
-                    "Meta (Sección 1.4)": "> 80.00 %",
+                    "Meta Operativa": "> 80.00 %",
                     "Estado": "✘ No alcanzada en 0.50 · ✔ Superada en 0.40 (+20 detectados)"
                 },
                 {
@@ -1704,7 +1769,7 @@ elif menu == VISTA_MODELOS:
                     "Umbral 0.50 (Estándar)": f"{m_test_050['f1']:.4f}",
                     "Umbral 0.40 (Operativo)": f"{m_test_040['f1']:.4f}",
                     f"Umbral Activo ({umbral:.2f})": f"{m_test['f1']:.4f}",
-                    "Meta (Sección 1.4)": "> 0.7800",
+                    "Meta Operativa": "> 0.7800",
                     "Estado": "✔ Superada en ambos (+0.0275 en 0.50)"
                 },
                 {
@@ -1712,7 +1777,7 @@ elif menu == VISTA_MODELOS:
                     "Umbral 0.50 (Estándar)": "TN=566 · FP=35 · FN=68 · TP=216",
                     "Umbral 0.40 (Operativo)": "TN=550 · FP=51 · FN=48 · TP=236",
                     f"Umbral Activo ({umbral:.2f})": f"TN={tn} · FP={fp} · FN={fn} · TP={tp}",
-                    "Meta (Sección 1.4)": "ROC-AUC = 0.9343",
+                    "Meta Operativa": "ROC-AUC = 0.9343",
                     "Estado": "Excelente discriminación probabilística"
                 },
             ])
@@ -1738,12 +1803,12 @@ elif menu == VISTA_MODELOS:
                 if cm_path.exists():
                     st.image(
                         str(cm_path),
-                        caption="Figura 8 del Informe: Matriz de confusión en Test con umbral operativo 0.40 (885 estudiantes).",
+                        caption="Matriz de confusión en Test con umbral operativo 0.40 (885 estudiantes).",
                         width="stretch"
                     )
 
         # 3. Curva Precision-Recall (Secuencial, ancho completo)
-        st.subheader("3. Curva Precision-Recall y Calibración del Umbral Operativo (Sección 4.3.4)")
+        st.subheader("3. Curva Precision-Recall y Calibración del Umbral Operativo")
         with tarjeta("card_pr"):
             st.altair_chart(grafico_precision_recall(y_test, proba_test, m_test, umbral), width="stretch")
             st.caption(
@@ -1753,10 +1818,10 @@ elif menu == VISTA_MODELOS:
             with st.expander("📷 Ver curva estática del informe académico (PNG)"):
                 pr_path = FIGURES / "curva_precision_recall.png"
                 if pr_path.exists():
-                    st.image(str(pr_path), caption="Figura 9: Curva Precision-Recall con umbral óptimo F1 (0.39) y operativo (0.40).", width="stretch")
+                    st.image(str(pr_path), caption="Curva Precision-Recall con umbral óptimo F1 (0.39) y operativo (0.40).", width="stretch")
 
         # 4. Importancia de Variables por Permutación (Secuencial, ancho completo)
-        st.subheader("4. Explicabilidad e Importancia de Variables por Permutación (Sección 4.3.5 — OE5)")
+        st.subheader("4. Explicabilidad e Importancia de Variables por Permutación (OE5)")
         with tarjeta("card_imp"):
             if perm_data:
                 st.altair_chart(grafico_importancia_permutacion(perm_data), width="stretch")
@@ -1988,155 +2053,229 @@ elif menu == VISTA_SIMULADOR:
 
 
 # ---------------------------------------------------------
-# VISTA 5: CONCLUSIONES, LIMITACIONES Y ÉTICA (CAPÍTULOS V Y VII)
+# VISTA 5: CONCLUSIONES, LIMITACIONES Y ÉTICA
 # ---------------------------------------------------------
 elif menu == VISTA_CONCLUSIONES:
     encabezado(
         "📌 Discusión, Conclusiones, Limitaciones y Ética de IA",
-        "Síntesis de hallazgos por objetivo (Cap. V), análisis de limitaciones técnicas, "
-        "matriz de consideraciones éticas (Cap. VII) y recomendaciones de mejora futura."
+        "Síntesis visual de hallazgos por objetivo, limitaciones técnicas, "
+        "recomendaciones futuras y gobernanza ética del sistema."
     )
 
-    tab_conc, tab_lim, tab_etica, tab_guion = st.tabs([
-        "🎯 5.1 – 5.2 Discusión y Conclusiones por Objetivo",
-        "⚠️ 5.3 Limitaciones y Recomendaciones Técnicas",
-        "⚖️ Cap. VII Consideraciones Éticas de IA",
-        "🎤 Guion de Exposición para el Equipo"
+    tab_conc, tab_lim, tab_etica = st.tabs([
+        "🎯 Discusión y Conclusiones por Objetivo",
+        "⚠️ Limitaciones y Recomendaciones Técnicas",
+        "⚖️ Consideraciones Éticas de IA",
     ])
 
     with tab_conc:
-        st.subheader("5.1 Discusión de Resultados frente a los Antecedentes")
-        with tarjeta("card_discusion"):
+        st.markdown("#### 🔬 Discusión de Resultados frente a los Antecedentes Científicos")
+        d1, d2, d3 = st.columns(3)
+        with tarjeta("disc_1", d1, "stretch"):
+            st.metric(
+                "🏆 Liderazgo en Ensambles",
+                "88.36 % Acc | 0.8266 F1",
+                "Consistente con el estado del arte",
+                delta_color="off",
+                delta_arrow="off",
+            )
             st.markdown(
-                "- **Coincidencia con el estado del arte en ensambles:** Al igual que *Banquez-Maturana et al. (2025)* en Colombia con LightGBM (`Accuracy = 87.00 %`, `F1 = 0.83`) y *Kuz y Morales (2023)* en México con XGBoost, nuestro estudio confirma que los algoritmos de **Gradient Boosting** lideran la capacidad predictiva (`Accuracy = 88.36 %`, `F1 = 0.8075` en umbral 0.50 y `0.8266` en umbral 0.40) al capturar interacciones no lineales entre variables académicas y financieras.\n"
-                "- **Convergencia en los factores determinantes:** Nuestros resultados de importancia por permutación coinciden directamente con *Banquez-Maturana et al. (2025)*, *Kuz y Morales (2023)* e *Izquierdo y Torres (2024)* en que el **rendimiento académico de los primeros semestres** (`Curricular units 2nd/1st sem approved`) y la **situación económica/beca** (`Tuition fees up to date`, `Scholarship holder`) son los predictores universales más potentes del abandono.\n"
-                "- **Diferencia metodológica frente a estudios locales previos:** Mientras que *Izquierdo y Torres (2024)* reportaron `98.70 %` de acierto evaluando Regresión Logística sobre el mismo conjunto de entrenamiento, nuestro protocolo aisla un conjunto de prueba ciego (`Hold-out 20 %`) y aplica validación cruzada estratificada de 5 pliegues sin fuga de datos, ofreciendo estimaciones realistas de generalización."
+                "Coincide con **Banquez-Maturana et al. (2025)** (*LightGBM: 87.0 % Acc, F1 = 0.83*) y **Kuz y Morales (2023)** (*XGBoost*): "
+                "los ensambles **Gradient Boosting** capturan mejor las interacciones no lineales académicas y financieras."
+            )
+        with tarjeta("disc_2", d2, "stretch"):
+            st.metric(
+                "🔑 Predictores Universales",
+                "2do Sem + Matrícula",
+                "Caída F1: -0.2261 y -0.0759",
+                delta_color="off",
+                delta_arrow="off",
+            )
+            st.markdown(
+                "Converge con la literatura internacional y local (**Izquierdo y Torres, 2024**): "
+                "las **materias aprobadas en 1er año** y la **morosidad / beca** son los determinantes más potentes del abandono."
+            )
+        with tarjeta("disc_3", d3, "stretch"):
+            st.metric(
+                "🛡️ Rigor Metodológico",
+                "Hold-Out 20 % Ciego",
+                "885 alumnos nunca vistos en Train",
+                delta_color="off",
+                delta_arrow="off",
+            )
+            st.markdown(
+                "A diferencia de estudios locales que evaluaron sobre el mismo entrenamiento (*98.7 %*), "
+                "nuestro pipeline aplica **5-Fold CV + Test independiente sin fuga de datos**, garantizando generalización real."
             )
 
-        st.subheader("5.2 Conclusiones por Objetivo (OG y OE1 – OE5)")
-        df_conclusiones = pd.DataFrame([
-            {
-                "Objetivo": "Objetivo General (OG)",
-                "Métrica / Evidencia Clave": "Gradient Boosting ganador (F1 Test = 0.8075 | ROC-AUC = 0.9343)",
-                "Conclusión Sustentada": "Se demostró que los modelos de ensamble (Gradient Boosting y Random Forest) y la Regresión Logística regularizada alcanzan un alto desempeño predictivo sobre el dataset UCI #697, superando ampliamente al Árbol de Decisión individual (F1 = 0.7481)."
-            },
-            {
-                "Objetivo": "OE1 · Exactitud (Accuracy)",
-                "Métrica / Evidencia Clave": "87.43 % en CV · 88.36 % en Test (782/885 aciertos)",
-                "Conclusión Sustentada": "Se superó en +13.36 puntos porcentuales la meta mínima del 75.00 % y en más de 20 puntos la tasa base de la clase mayoritaria (67.9 %)."
-            },
-            {
-                "Objetivo": "OE2 · Precisión (Precision)",
-                "Métrica / Evidencia Clave": "84.96 % en CV · 86.06 % en Test (umbral 0.50) / 82.23 % (umbral 0.40)",
-                "Conclusión Sustentada": "Se superó la meta del 75.00 %, manteniendo las falsas alarmas en solo 5.82 % (35/601) con umbral 0.50 y 8.49 % (51/601) con umbral 0.40, evitando sobrecargar a Bienestar Universitario."
-            },
-            {
-                "Objetivo": "OE3 · Sensibilidad (Recall)",
-                "Métrica / Evidencia Clave": "76.06 % (umbral 0.50) → 83.10 % (umbral operativo 0.40)",
-                "Conclusión Sustentada": "Con el umbral por defecto (0.50) no se alcanzaba el 80 % por falta de ponderación de clase en Gradient Boosting; al calibrar el umbral operativo a 0.40 se detectan 236 de 284 desertores (83.10 %), superando la meta."
-            },
-            {
-                "Objetivo": "OE4 · Equilibrio F1-Score",
-                "Métrica / Evidencia Clave": "0.7907 ± 0.0085 en CV · 0.8075 en Test (0.50) / 0.8266 (0.40)",
-                "Conclusión Sustentada": "Se superó la meta de F1 > 0.78 tanto en validación cruzada como en prueba independiente, confirmando estabilidad entre pliegues y ausencia de sobreajuste."
-            },
-            {
-                "Objetivo": "OE5 · Variables Predictivas",
-                "Métrica / Evidencia Clave": "Caída de F1: Aprobadas 2do sem (-0.2261) y Pago al día (-0.0759)",
-                "Conclusión Sustentada": "El abandono estudiantil responde principalmente a la interacción entre el rezago académico al cierre del 1er año y la morosidad en las tasas de matrícula."
-            },
-        ])
-        st.dataframe(df_conclusiones, width="stretch", hide_index=True)
+        st.markdown("#### ✅ Conclusiones por Objetivo (OG y OE1 – OE5)")
+        with tarjeta("conc_og"):
+            c_og_izq, c_og_der = st.columns([1, 2.2], gap="large")
+            with c_og_izq:
+                st.metric(
+                    "🎯 Objetivo General (OG)",
+                    "Gradient Boosting Ganador",
+                    "F1 Test: 0.8075 (0.50) → 0.8266 (0.40) | ROC-AUC: 0.9343",
+                    delta_color="off",
+                    delta_arrow="off",
+                )
+            with c_og_der:
+                st.markdown(
+                    "**Conclusión General:** Los modelos de ensamble (**Gradient Boosting** y **Random Forest**) y la **Regresión Logística** "
+                    "alcanzan un alto poder predictivo sobre el dataset UCI #697, superando ampliamente al Árbol de Decisión individual (`F1 = 0.7481`) "
+                    "y permitiendo anticipar la deserción estudiantil con rigor estadístico."
+                )
+
+        co1, co2, co3 = st.columns(3)
+        with tarjeta("conc_oe1", co1, "stretch"):
+            st.metric("OE1 · Exactitud Global", "88.36 % en Test", "✔ Meta > 75.00 % (+13.36 pp)", delta_color="off", delta_arrow="off")
+            st.markdown(
+                "Clasifica correctamente a **782 de 885 estudiantes** (`87.43 %` en CV y `88.81 %` con umbral `0.40`), "
+                "superando en más de **20 puntos** la tasa base mayoritaria (`67.9 %`)."
+            )
+        with tarjeta("conc_oe2", co2, "stretch"):
+            st.metric("OE2 · Precisión (Dropout)", "86.06 % en Test", "✔ Meta > 75.00 % (Solo 5.8 % FP)", delta_color="off", delta_arrow="off")
+            st.markdown(
+                "De 251 alertas en umbral `0.50`, **216 son desertores reales** (solo 35 falsas alarmas; `82.23 %` en umbral `0.40`), "
+                "evitando sobrecargar a Bienestar Universitario."
+            )
+        with tarjeta("conc_oe3", co3, "stretch"):
+            st.metric("OE3 · Sensibilidad (Recall)", "83.10 % (Umbral 0.40)", "✔ Meta > 80.00 % (+20 rescatados)", delta_color="off", delta_arrow="off")
+            st.markdown(
+                "El umbral estándar (`0.50`) detectaba `76.06 %` (216/284). Al calibrar el corte operativo a **`0.40`**, "
+                "se detectan **236 de 284 desertores**, cumpliendo la meta institucional."
+            )
+
+        co4, co5 = st.columns([1, 2])
+        with tarjeta("conc_oe4", co4, "stretch"):
+            st.metric("OE4 · Balance F1-Score", "0.8075 → 0.8266", "✔ Meta > 0.78 (CV: 0.7907 ± 0.0085)", delta_color="off", delta_arrow="off")
+            st.markdown(
+                "Supera el criterio en validación cruzada y en prueba ciega, confirmando **alta estabilidad entre pliegues y cero sobreajuste**."
+            )
+        with tarjeta("conc_oe5", co5, "stretch"):
+            st.metric("OE5 · Variables con Mayor Peso Predictivo", "Rendimiento 1er Año + Solvencia", "Aprobadas 2do Sem (-0.2261 F1) y Matrícula al Día (-0.0759 F1)", delta_color="off", delta_arrow="off")
+            st.markdown(
+                "La deserción responde principalmente a la combinación de **rezago académico** (`2do y 1er semestre`) y **morosidad financiera / ausencia de beca**, "
+                "guiando intervenciones conjuntas de tutoría académica y apoyo socioeconómico."
+            )
 
     with tab_lim:
-        st.subheader("5.3 Limitaciones del Estudio y Recomendaciones Técnicas de Mejora")
+        st.markdown("#### ⚠️ Limitaciones del Estudio vs. 🚀 Hoja de Ruta Técnica")
         c_lim, c_rec = st.columns(2, gap="large")
+
         with c_lim:
             with tarjeta("card_limitaciones_53", height="stretch"):
-                st.markdown("#### ⚠️ a) Limitaciones Metodológicas y de Alcance")
-                st.markdown(
-                    "1. **Limitación geográfica y de datos:** El dataset proviene de una única institución portuguesa (*Instituto Politécnico de Portalegre*, 2008–2019). No generaliza directamente a universidades peruanas sin reentrenamiento y validación local.\n"
-                    "2. **Ventana temporal de predicción:** La variable más influyente (`Curricular units 2nd sem approved`) se conoce al finalizar el segundo semestre; por tanto, el modelo opera como alerta de **cierre de primer año** y no como predictor al momento de la admisión.\n"
-                    "3. **Calibración exploratoria del umbral `0.40`:** El umbral `0.40` se inspeccionó sobre la curva Precision-Recall de prueba; para producción estricta debe fijarse con predicciones *out-of-fold* exclusivamente en entrenamiento.\n"
-                    "4. **Asociación vs. Causalidad:** La importancia por permutación refleja qué variables utiliza el modelo para decidir, pero **no demuestra relación causal directa**.\n"
-                    "5. **Búsqueda de hiperparámetros acotada:** Por restricciones de tiempo académico se emplearon configuraciones controladas sin búsqueda exhaustiva (*GridSearch/Optuna*)."
-                )
+                st.markdown("##### ⚠️ Limitaciones Metodológicas y de Alcance")
+                lim_items = [
+                    ("🌍 1. Validez externa geográfica", "Datos de una sola institución en Portugal (*IP Portalegre*, UCI #697); requiere validación local antes de extrapolar a Perú."),
+                    ("⏳ 2. Ventana al cierre del 1er año", "Su predictor principal (`2do sem aprobado`) se consolida al terminar el 2do ciclo, no el primer día de matrícula."),
+                    ("🎚️ 3. Umbral 0.40 exploratorio", "Calibrado inspeccionando la curva PR en prueba; para producción estricta debe fijarse *Out-of-Fold* en `X_train`."),
+                    ("🔗 4. Asociación ≠ Causalidad", "La importancia por permutación mide el peso predictivo dentro del modelo, pero no demuestra relación causal directa."),
+                    ("⚙️ 5. Hiperparámetros acotados", "Configuración controlada por tiempo académico sin búsqueda exhaustiva (*GridSearch / Optuna*)."),
+                ]
+                for tit_l, desc_l in lim_items:
+                    st.markdown(
+                        f"<div style='padding:10px 14px;margin-bottom:8px;border-radius:8px;background:#fff8eb;border-left:4px solid #fab219'>"
+                        f"<div style='font-weight:700;color:#854d0e;font-size:0.95rem'>{tit_l}</div>"
+                        f"<div style='color:#422006;font-size:0.88rem;margin-top:2px'>{desc_l}</div></div>",
+                        unsafe_allow_html=True,
+                    )
+
         with c_rec:
             with tarjeta("card_recomendaciones_53", height="stretch"):
-                st.markdown("#### 🚀 d) Recomendaciones Técnicas Futuras")
-                st.markdown(
-                    "1. **Calibración de umbral Out-of-Fold (OOF) y Cost-Sensitive Learning:** Seleccionar el umbral óptimo con `cross_val_predict(method='predict_proba')` en `X_train` o incorporar `sample_weight` en Gradient Boosting para elevar el Recall base desde el entrenamiento.\n"
-                    "2. **Evaluar técnicas de sobremuestreo (SMOTE) y nuevos ensambles:** Contrastar el esquema actual contra `SMOTE` dentro de cada pliegue de validación y evaluar **LightGBM / XGBoost / CatBoost** con optimización bayesiana (*Optuna*).\n"
-                    "3. **Modelos por etapa temprana (Ingreso vs. 1er Semestre vs. 2do Semestre):** Entrenar tres modelos escalonados (al matricularse, al cierre del 1er ciclo y al cierre del 2do ciclo) para emitir alertas desde el primer día de clases.\n"
-                    "4. **Validación externa con datos institucionales de UPN:** Adaptar el pipeline modular (`src/`) a registros históricos locales para validar su transferencia al contexto universitario peruano."
-                )
+                st.markdown("##### 🚀 Recomendaciones Técnicas Futuras")
+                rec_items = [
+                    ("🎯 1. Umbral Out-of-Fold (OOF) y Cost-Sensitive", "Estimar el umbral óptimo con `cross_val_predict` solo en `X_train` e incorporar `sample_weight` en Gradient Boosting."),
+                    ("⚡ 2. Nuevos Ensambles + Optimización Bayesiana", "Evaluar **XGBoost, LightGBM y CatBoost** ajustados con *Optuna* y comparar contra `SMOTE` dentro de cada pliegue."),
+                    ("📅 3. Modelos Escalonados por Etapa", "Desplegar 3 modelos según el momento del alumno: **Ingreso (Admisión)** → **Cierre 1er Ciclo** → **Cierre 2do Ciclo**."),
+                    ("🏫 4. Adaptación con Datos Institucionales UPN", "Conectar la arquitectura modular (`src/`) al historial académico y financiero local para validar su transferencia en Perú."),
+                    ("🔄 5. Monitoreo Continuo (MLOps)", "Recalibrar periódicamente las probabilidades por cohorte semestral para prevenir degradación por cambios curriculares o económicos."),
+                ]
+                for tit_r, desc_r in rec_items:
+                    st.markdown(
+                        f"<div style='padding:10px 14px;margin-bottom:8px;border-radius:8px;background:#eff6ff;border-left:4px solid #184f95'>"
+                        f"<div style='font-weight:700;color:#0d366b;font-size:0.95rem'>{tit_r}</div>"
+                        f"<div style='color:#1e3a8a;font-size:0.88rem;margin-top:2px'>{desc_r}</div></div>",
+                        unsafe_allow_html=True,
+                    )
 
     with tab_etica:
-        st.subheader("Capítulo VII: Matriz de Riesgos y Consideraciones Éticas de IA")
+        st.markdown("#### ⚖️ Gobernanza y Consideraciones Éticas de IA")
         st.info(
-            "💡 **Principio rector del sistema:** La alerta predictiva tiene como único fin **ofrecer acompañamiento académico y socioeconómico oportuno**, "
-            "**nunca sancionar, excluir ni estigmatizar** al estudiante. Toda decisión recae siempre en un profesional de tutoría o bienestar universitario (*Human-in-the-loop*)."
+            "💡 **Principio Rector (*Human-in-the-loop*):** La alerta predictiva tiene como único fin **asignar acompañamiento académico y bienestar oportuno**, "
+            "**nunca sancionar, excluir ni estigmatizar** al estudiante. Toda decisión recae siempre en un profesional de tutoría."
         )
-        df_etica = pd.DataFrame([
-            {
-                "Riesgo Ético / Técnico": "1. Sesgo por desbalance de clases (32.1 % vs 67.9 %)",
-                "Descripción e Impacto Potencial": "Un clasificador sin ajuste tiende a favorecer la clase mayoritaria, dejando sin alerta a estudiantes vulnerables (falsos negativos).",
-                "Probabilidad / Severidad": "Media / Alta",
-                "Grupo Afectado": "Estudiantes en riesgo no detectados (FN)",
-                "Acción de Mitigación Aplicada": "Ponderación `class_weight='balanced'` en entrenamiento y calibración del umbral operativo a 0.40 para reducir FN de 68 a 48."
-            },
-            {
-                "Riesgo Ético / Técnico": "2. Sesgo demográfico o socioeconómico",
-                "Descripción e Impacto Potencial": "El uso de variables como género, nacionalidad, edad o estudios de los padres podría reproducir sesgos históricos.",
-                "Probabilidad / Severidad": "Media / Media",
-                "Grupo Afectado": "Estudiantes adultos, extranjeros o de menor nivel socioeconómico",
-                "Acción de Mitigación Aplicada": "Auditoría de importancia por permutación y uso exclusivo de la alerta para asignar apoyo positivo (tutoría/becas), nunca para restringir derechos."
-            },
-            {
-                "Riesgo Ético / Técnico": "3. Fuga de datos (Data Leakage) y sobreajuste",
-                "Descripción e Impacto Potencial": "Contaminar el preprocesamiento con datos de prueba inflaría artificialmente las métricas antes de salir a producción.",
-                "Probabilidad / Severidad": "Baja / Alta",
-                "Grupo Afectado": "Institución educativa (decisiones basadas en métricas falsas)",
-                "Acción de Mitigación Aplicada": "Encapsulamiento estricto en `Pipeline` + `ColumnTransformer` ajustado solo en `X_train` y validación cruzada de 5 pliegues."
-            },
-            {
-                "Riesgo Ético / Técnico": "4. Privacidad y protección de datos personales",
-                "Descripción e Impacto Potencial": "Exposición de calificaciones, deudas o situación económica de alumnos identificables.",
-                "Probabilidad / Severidad": "Baja / Alta",
-                "Grupo Afectado": "Comunidad estudiantil",
-                "Acción de Mitigación Aplicada": "Uso de registros anonimizados (UCI #697 con licencia CC BY 4.0) y control de acceso institucional en caso de adopción real (Ley N° 29733 en Perú)."
-            },
-            {
-                "Riesgo Ético / Técnico": "5. Opacidad algorítmica (Caja Negra) y automatización ciega",
-                "Descripción e Impacto Potencial": "Tomar medidas administrativas sin entender por qué el modelo asignó alto riesgo a un estudiante.",
-                "Probabilidad / Severidad": "Media / Alta",
-                "Grupo Afectado": "Estudiantes evaluados y tutores académicos",
-                "Acción de Mitigación Aplicada": "Desglose individual de factores que suben/bajan el riesgo en el simulador, importancia por permutación global y supervisión humana obligatoria."
-            },
-            {
-                "Riesgo Ético / Técnico": "6. Degradación del modelo en el tiempo (Concept / Data Drift)",
-                "Descripción e Impacto Potencial": "Cambios económicos o curriculares pueden alterar los patrones de abandono respecto al periodo entrenado.",
-                "Probabilidad / Severidad": "Alta / Media",
-                "Grupo Afectado": "Gestión de retención universitaria",
-                "Acción de Mitigación Aplicada": "Monitoreo periódico de métricas por cohorte semestral y reentrenamiento anual del pipeline."
-            },
-        ])
-        st.dataframe(df_etica, width="stretch", hide_index=True)
 
-    with tab_guion:
-        st.subheader("🎤 Ruta Sugerida para Exponer 100 % desde Streamlit (5 Integrantes)")
-        g1, g2, g3, g4, g5 = st.columns(5)
-        bloques_guion = [
-            ("1️⃣ Integrante 1", "Contexto y Objetivos", "Pestaña **🏠 Contexto y Objetivos**: presentar al Grupo 03, el problema (20-30 % global, 174 mil en Perú, 25 % en Trujillo), antecedentes, pregunta, objetivos (OG y OE1–OE5), alcance, restricciones y metas."),
-            ("2️⃣ Integrante 2", "Datos y Metodología", "Pestaña **📊 Datos y Metodología**: explicar las 6 fases CRISP-DM, la muestra censal (4,424; split 80/20 estratificado), el EDA interactivo y los 5 bloques de 36 variables."),
-            ("3️⃣ Integrante 3", "Preprocesamiento y Modelos", "Pestaña **📊 Datos y Metodología (tabs 4 y 5)**: mostrar el `ColumnTransformer` sin fuga de datos, la tabla real de los **5 estudiantes (36 → 235 cols)** y los hiperparámetros de los 4 modelos."),
-            ("4️⃣ Integrante 4", "Resultados OE1–OE5", "Pestaña **🏆 Modelos y Resultados**: exponer el triunfo de Gradient Boosting en 5-Fold CV (`0.7907`), responder OE1 a OE5, y explicar el paso de umbral `0.50` a `0.40` (rescatando 20 desertores: Recall `83.1 %`)."),
-            ("5️⃣ Integrante 5", "Simulador, Conclusiones y Ética", "Pestañas **🔮 Simulador en Vivo** y **📌 Conclusiones y Ética**: probar en vivo los perfiles de riesgo y un lote CSV, y cerrar con conclusiones por objetivo, limitaciones y matriz ética."),
+        riesgos_cards = [
+            (
+                "⚖️ 1. Sesgo por Desbalance (32.1 % vs 67.9 %)",
+                "Severidad Alta · Prob. Media",
+                "#fef2f2",
+                "#d03b3b",
+                "Un modelo sin ajuste favorece la clase mayoritaria y omite alumnos vulnerables (FN).",
+                "`class_weight='balanced'` en entrenamiento y umbral operativo `0.40` (reduce FN de 68 a 48).",
+            ),
+            (
+                "👥 2. Sesgo Demográfico o Socioeconómico",
+                "Severidad Media · Prob. Media",
+                "#fffbeb",
+                "#d97706",
+                "Variables como edad, nacionalidad o estudios paternos podrían reflejar brechas históricas.",
+                "Auditoría por permutación y uso exclusivo de la alerta para **apoyo positivo** (becas/tutoría).",
+            ),
+            (
+                "🛡️ 3. Fuga de Datos (*Data Leakage*)",
+                "Severidad Alta · Prob. Baja",
+                "#eff6ff",
+                "#184f95",
+                "Preprocesar con todo el dataset inflaría artificialmente las métricas antes de producción.",
+                "Encapsulamiento estricto en `Pipeline` + `ColumnTransformer` ajustado solo sobre `X_train`.",
+            ),
+            (
+                "🔒 4. Privacidad y Datos Personales",
+                "Severidad Alta · Prob. Baja",
+                "#eff6ff",
+                "#184f95",
+                "Riesgo de exposición de calificaciones, morosidad o situación económica de estudiantes.",
+                "Anonimización total (UCI #697 CC BY 4.0) y cumplimiento de la **Ley N° 29733** en despliegue local.",
+            ),
+            (
+                "🔍 5. Opacidad Algorítmica (*Caja Negra*)",
+                "Severidad Alta · Prob. Media",
+                "#fef2f2",
+                "#d03b3b",
+                "Emitir alertas sin explicar qué factores elevaron el riesgo del estudiante.",
+                "Explicabilidad global (Top 15 permutación) y desglose por alumno en el simulador en vivo.",
+            ),
+            (
+                "📉 6. Degradación Temporal (*Concept Drift*)",
+                "Severidad Media · Prob. Alta",
+                "#fffbeb",
+                "#d97706",
+                "Cambios económicos o de malla curricular alteran los patrones históricos de abandono.",
+                "Monitoreo de métricas por cohorte semestral y reentrenamiento anual del pipeline.",
+            ),
         ]
-        for col_g, (num_g, tit_g, txt_g) in zip(
-            [g1, g2, g3, g4, g5], bloques_guion
-        ):
-            with tarjeta(f"guion_{num_g}", col_g, "stretch"):
-                st.markdown(f"**{num_g}**")
-                st.caption(tit_g)
-                st.markdown(txt_g)
+
+        e_row1 = st.columns(3)
+        for col_e, (tit_e, badge_e, bg_e, border_e, r_txt, m_txt) in zip(e_row1, riesgos_cards[:3]):
+            with tarjeta(f"etica_card_{tit_e[:4]}", col_e, "stretch"):
+                st.markdown(
+                    f"<div style='display:inline-block;padding:2px 10px;border-radius:12px;background:{bg_e};color:{border_e};font-size:0.78rem;font-weight:700;margin-bottom:6px'>{badge_e}</div>"
+                    f"<div style='font-weight:700;font-size:1.02rem;color:#0d366b;margin-bottom:6px'>{tit_e}</div>",
+                    unsafe_allow_html=True,
+                )
+                st.markdown(f"**Riesgo:** {r_txt}")
+                st.markdown(f"✅ **Mitigación:** {m_txt}")
+
+        e_row2 = st.columns(3)
+        for col_e, (tit_e, badge_e, bg_e, border_e, r_txt, m_txt) in zip(e_row2, riesgos_cards[3:]):
+            with tarjeta(f"etica_card_{tit_e[:4]}", col_e, "stretch"):
+                st.markdown(
+                    f"<div style='display:inline-block;padding:2px 10px;border-radius:12px;background:{bg_e};color:{border_e};font-size:0.78rem;font-weight:700;margin-bottom:6px'>{badge_e}</div>"
+                    f"<div style='font-weight:700;font-size:1.02rem;color:#0d366b;margin-bottom:6px'>{tit_e}</div>",
+                    unsafe_allow_html=True,
+                )
+                st.markdown(f"**Riesgo:** {r_txt}")
+                st.markdown(f"✅ **Mitigación:** {m_txt}")
+
